@@ -1,7 +1,5 @@
 # UserBundle
 
-composer require stof/doctrine-extensions-bundle
-
 Configuration
 -------------
 
