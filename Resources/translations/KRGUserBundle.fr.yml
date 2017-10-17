@@ -1,0 +1,48 @@
+form:
+    email: 'Adresse email'
+    firstname: Prénom
+    lastname: Nom
+    password: 'Mot de passe'
+    password_confirmation: 'Répéter le mot de passe'
+    current_password: 'Mot de passe actuel'
+    terms: 'Conditions générales'
+    submit: Envoyer
+    submit_registration: Inscription
+    submit_profile: 'Mettre à jour mon profil'
+    submit_change_password: 'Mettre à jour mon mot de passe'
+    submit_reset_password: 'Réinitialiser mon mot de passe'
+
+security:
+    login:
+        username: 'Adresse email'
+        password: 'Mot de passe'
+        remember_me: 'Se souvenir de moi'
+        submit: Connexion
+layout:
+    logout: Déconnexion
+    login: Connexion
+    register: Inscription
+    logged_in_as: 'Connecté en tant que %username%'
+
+resetting:
+    request:
+        check_email: |
+            Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour réinitialiser votre mot de passe.
+
+            Si vous ne recevez pas un email, vérifiez votre dossier spam ou essayez à nouveau.
+        username: 'Adresse email'
+        submit: 'Réinitialiser le mot de passe'
+
+change_password:
+    submit: 'Modifier le mot de passe'
+    flash:
+        success: 'Le mot de passe a été modifié.'
+
+registration:
+    check_email: 'Un e-mail a été envoyé à l''adresse %email%. Il contient un lien d''activation sur lequel il vous faudra cliquer afin d''activer votre compte.'
+    confirmed: 'Félicitations %username%, votre compte est maintenant activé.'
+    back: 'Retour à la page d''origine.'
+
+profile:
+    flash:
+        success: 'Votre profil à été mis à jour.'

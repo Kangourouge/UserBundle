@@ -1,0 +1,41 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+      # TODO: Symfony 3.4 http://symfony.com/blog/new-in-symfony-3-4-local-service-binding
+      # bind:
+      #     $firewallName: 'main'
+
+    KRG\UserBundle\:
+        resource: '../../*'
+        exclude: '../../{Command,DependencyInjection,Doctrine,Entity,Event,Message,Repository,Resources}'
+
+    KRG\UserBundle\Controller\:
+        resource: '../../Controller'
+        public: true
+        tags: ['controller.service_arguments']
+
+    KRG\UserBundle\EventListener\:
+        resource: '../../EventListener'
+        tags: [kernel.event_subscriber]
+
+    KRG\UserBundle\EventListener\AuthenticationListener:
+        arguments:
+            $firewallName: 'main'
+
+    # Alias https://symfony.com/doc/current/service_container/alias_private.html
+    security.authentication.success_handler.main.form_login:
+        alias: KRG\UserBundle\Security\Firewall\AuthenticationSuccessHandler
+
+    # Interfaces https://symfony.com/doc/current/service_container/autowiring.html#using-aliases-to-enable-autowiring
+    KRG\UserBundle\Manager\LoginManagerInterface: '@KRG\UserBundle\Manager\LoginManager'
+    KRG\UserBundle\Manager\UserManagerInterface: '@KRG\UserBundle\Manager\UserManager'
+    KRG\UserBundle\Util\PasswordUpdaterInterface: '@KRG\UserBundle\Util\PasswordUpdater'
+    Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@KRG\UserBundle\Security\Firewall\AuthenticationSuccessHandler'
+
+    # Deprecated
+    Symfony\Component\Security\Http\HttpUtils:
+        alias: security.http_utils
+    Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface:
+        alias: security.authentication.session_strategy
