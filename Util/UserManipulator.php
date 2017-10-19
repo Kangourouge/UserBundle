@@ -51,7 +51,6 @@ class UserManipulator
     /**
      * Creates a user and returns it.
      *
-     * @param string $username
      * @param string $password
      * @param string $email
      * @param bool   $active
@@ -59,10 +58,9 @@ class UserManipulator
      *
      * @return \KRG\UserBundle\Entity\UserInterface
      */
-    public function create($username, $password, $email, $active, $superadmin)
+    public function create($password, $email, $active, $superadmin)
     {
         $user = $this->userManager->createUser();
-        $user->setUsername($username);
         $user->setEmail($email);
         $user->setPlainPassword($password);
         $user->setEnabled((bool) $active);

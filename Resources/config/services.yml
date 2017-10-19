@@ -16,6 +16,11 @@ services:
         public: true
         tags: ['controller.service_arguments']
 
+    KRG\UserBundle\Form\Type\:
+        resource: '../../Form/Type'
+        public: true
+        tags: ['form.type']
+
     KRG\UserBundle\EventListener\:
         resource: '../../EventListener'
         tags: [kernel.event_subscriber]

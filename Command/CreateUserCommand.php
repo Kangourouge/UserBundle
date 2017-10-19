@@ -35,7 +35,6 @@ class CreateUserCommand extends ContainerAwareCommand
             ->setName('krg:user:create')
             ->setDescription('Create a user.')
             ->setDefinition([
-                new InputArgument('username', InputArgument::REQUIRED, 'The username'),
                 new InputArgument('email', InputArgument::REQUIRED, 'The email'),
                 new InputArgument('password', InputArgument::REQUIRED, 'The password'),
                 new InputOption('super-admin', null, InputOption::VALUE_NONE, 'Set the user as super admin'),
@@ -69,14 +68,13 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $username = $input->getArgument('username');
         $email = $input->getArgument('email');
         $password = $input->getArgument('password');
         $inactive = $input->getOption('inactive');
         $superadmin = $input->getOption('super-admin');
 
         $manipulator = $this->getContainer()->get(UserManipulator::class);
-        $manipulator->create($username, $password, $email, !$inactive, $superadmin);
+        $manipulator->create($password, $email, !$inactive, $superadmin);
 
         $output->writeln(sprintf('Created user <comment>%s</comment>', $username));
     }
@@ -87,18 +85,6 @@ EOT
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $questions = [];
-
-        if (!$input->getArgument('username')) {
-            $question = new Question('Please choose a username:');
-            $question->setValidator(function ($username) {
-                if (empty($username)) {
-                    throw new \Exception('Username can not be empty');
-                }
-
-                return $username;
-            });
-            $questions['username'] = $question;
-        }
 
         if (!$input->getArgument('email')) {
             $question = new Question('Please choose an email:');
