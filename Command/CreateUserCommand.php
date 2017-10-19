@@ -76,7 +76,7 @@ EOT
         $manipulator = $this->getContainer()->get(UserManipulator::class);
         $manipulator->create($password, $email, !$inactive, $superadmin);
 
-        $output->writeln(sprintf('Created user <comment>%s</comment>', $username));
+        $output->writeln(sprintf('Created user <comment>%s</comment>', $email));
     }
 
     /**
