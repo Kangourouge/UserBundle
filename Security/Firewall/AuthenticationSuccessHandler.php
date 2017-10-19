@@ -8,6 +8,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
+use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
@@ -23,6 +24,19 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     protected $validator;
 
     /**
+     * @var string
+     */
+    protected $adminRedirectRoute;
+
+    public function __construct(HttpUtils $httpUtils, array $options = array(), RouterInterface $router, ValidatorInterface $validator)
+    {
+        parent::__construct($httpUtils, $options);
+
+        $this->router = $router;
+        $this->validator = $validator;
+    }
+
+    /**
      * Firewalls: guess and secured_area pass here
      *
      * @param Request $request
@@ -33,8 +47,8 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     {
         $path = $this->determineTargetUrl($request);
 
-        if (self::hasAdminRole($token->getRoles())) {
-            $path = $this->router->generate('sonata_admin_redirect'); // TODO: config.yml
+        if (self::hasAdminRole($token->getRoles()) && $this->adminRedirectRoute) {
+            $path = $this->router->generate($this->adminRedirectRoute);
         }
 
         // TODO: ici pour peut tester si le Profil est complet et rediriger vers l'edition de profil
@@ -59,19 +73,8 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         return false;
     }
 
-    /**
-     * @param RouterInterface $router
-     */
-    public function setRouter($router)
+    public function setAdminRedirectRoute($adminRedirectRoute)
     {
-        $this->router = $router;
-    }
-
-    /**
-     * @param ValidatorInterface $validator
-     */
-    public function setValidator($validator)
-    {
-        $this->validator = $validator;
+        $this->adminRedirectRoute = $adminRedirectRoute;
     }
 }

@@ -30,7 +30,7 @@ class RegistrationController extends AbstractController
     /**
      * @var string
      */
-    private $successTargetRoute;
+    private $confirmedTargetRoute;
 
     /**
      * @Route("", name="krg_user_registration_register")
@@ -165,7 +165,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    public function setConfirmedTargetRoute(string $confirmedTargetRoute)
+    public function setConfirmedTargetRoute($confirmedTargetRoute)
     {
         $this->confirmedTargetRoute = $confirmedTargetRoute;
     }

@@ -27,6 +27,11 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('confirmed_target_route')->end()
                     ->end()
                 ->end()
+                ->arrayNode('login')
+                    ->children()
+                        ->scalarNode('admin_redirect_route')->end()
+                    ->end()
+                ->end()
             ->end()
         ;
 

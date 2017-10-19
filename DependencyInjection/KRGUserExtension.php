@@ -3,6 +3,7 @@
 namespace KRG\UserBundle\DependencyInjection;
 
 use KRG\UserBundle\Controller\RegistrationController;
+use KRG\UserBundle\Security\Firewall\AuthenticationSuccessHandler;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;
@@ -38,6 +39,12 @@ class KRGUserExtension extends Extension
                 $config['registration']['confirmed_target_route']
             ]);
         }
+
+        if (isset($config['login']['admin_redirect_route'])) {
+            $this->callServiceSetter(AuthenticationSuccessHandler::class, 'setAdminRedirectRoute', [
+                $config['login']['admin_redirect_route']
+            ]);
+        }
     }
 
     /**
@@ -48,7 +55,7 @@ class KRGUserExtension extends Extension
      * @param array $values
      * @return Definition|bool
      */
-    public function callServiceSetter(string $serviceName, string $setter, array $values)
+    public function callServiceSetter($serviceName, $setter, array $values)
     {
         if (null === $this->container) {
             return false;
