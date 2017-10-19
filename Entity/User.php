@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use KRG\UserBundle\Util\Canonicalizer;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\MappedSuperclass(repositoryClass="KRG\UserBundle\Repository\UserRepository")
