@@ -67,7 +67,7 @@ class UserManipulator
         $user->setPlainPassword($password);
         $user->setEnabled((bool) $active);
         $user->setSuperAdmin((bool) $superadmin);
-        $this->userManager->updateUser($user);
+        $this->userManager->updateUser($user, true);
 
         $event = new UserEvent($user, $this->getRequest());
         $this->dispatcher->dispatch(KRGUserEvents::USER_CREATED, $event);
@@ -84,7 +84,7 @@ class UserManipulator
     {
         $user = $this->findUserByUsernameOrThrowException($username);
         $user->setEnabled(true);
-        $this->userManager->updateUser($user);
+        $this->userManager->updateUser($user, true);
 
         $event = new UserEvent($user, $this->getRequest());
         $this->dispatcher->dispatch(KRGUserEvents::USER_ACTIVATED, $event);
@@ -99,7 +99,7 @@ class UserManipulator
     {
         $user = $this->findUserByUsernameOrThrowException($username);
         $user->setEnabled(false);
-        $this->userManager->updateUser($user);
+        $this->userManager->updateUser($user, true);
 
         $event = new UserEvent($user, $this->getRequest());
         $this->dispatcher->dispatch(KRGUserEvents::USER_DEACTIVATED, $event);
@@ -115,7 +115,7 @@ class UserManipulator
     {
         $user = $this->findUserByUsernameOrThrowException($username);
         $user->setPlainPassword($password);
-        $this->userManager->updateUser($user);
+        $this->userManager->updateUser($user, true);
 
         $event = new UserEvent($user, $this->getRequest());
         $this->dispatcher->dispatch(KRGUserEvents::USER_PASSWORD_CHANGED, $event);
@@ -130,7 +130,7 @@ class UserManipulator
     {
         $user = $this->findUserByUsernameOrThrowException($username);
         $user->setSuperAdmin(true);
-        $this->userManager->updateUser($user);
+        $this->userManager->updateUser($user, true);
 
         $event = new UserEvent($user, $this->getRequest());
         $this->dispatcher->dispatch(KRGUserEvents::USER_PROMOTED, $event);
@@ -145,7 +145,7 @@ class UserManipulator
     {
         $user = $this->findUserByUsernameOrThrowException($username);
         $user->setSuperAdmin(false);
-        $this->userManager->updateUser($user);
+        $this->userManager->updateUser($user, true);
 
         $event = new UserEvent($user, $this->getRequest());
         $this->dispatcher->dispatch(KRGUserEvents::USER_DEMOTED, $event);
@@ -166,7 +166,7 @@ class UserManipulator
             return false;
         }
         $user->addRole($role);
-        $this->userManager->updateUser($user);
+        $this->userManager->updateUser($user, true);
 
         return true;
     }
@@ -186,7 +186,7 @@ class UserManipulator
             return false;
         }
         $user->removeRole($role);
-        $this->userManager->updateUser($user);
+        $this->userManager->updateUser($user, true);
 
         return true;
     }

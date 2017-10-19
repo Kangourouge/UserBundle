@@ -20,6 +20,9 @@ services:
         resource: '../../EventListener'
         tags: [kernel.event_subscriber]
 
+    KRG\UserBundle\Util\:
+         resource: '../../Util'
+
     KRG\UserBundle\EventListener\AuthenticationListener:
         arguments:
             $firewallName: 'main'

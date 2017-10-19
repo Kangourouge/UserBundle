@@ -545,6 +545,17 @@ class User implements UserInterface, \Serializable
         return $this->hasRole(static::ROLE_SUPER_ADMIN);
     }
 
+    public function setSuperAdmin($boolean)
+    {
+        if (true === $boolean) {
+            $this->addRole(static::ROLE_SUPER_ADMIN);
+        } else {
+            $this->removeRole(static::ROLE_SUPER_ADMIN);
+        }
+
+        return $this;
+    }
+
     /**
      * Set terms
      *

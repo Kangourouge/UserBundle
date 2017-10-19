@@ -2,7 +2,6 @@
 
 namespace KRG\UserBundle\Controller;
 
-use KRG\UserBundle\Manager\LoginManager;
 use KRG\UserBundle\Manager\LoginManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
