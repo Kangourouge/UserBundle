@@ -118,6 +118,7 @@ class User implements UserInterface, \Serializable
     public function getName()
     {
         $gender = $this->gender ? ($this->gender === GenderEnum::MALE ? 'M.' : 'Mme.') : '';
+        
         return ucwords(trim(sprintf('%s %s %s', $gender, $this->firstname, $this->lastname)));
     }
 
