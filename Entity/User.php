@@ -5,6 +5,7 @@ namespace KRG\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use KRG\UserBundle\Doctrine\DBAL\GenderEnum;
 use KRG\UserBundle\Util\Canonicalizer;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -108,7 +109,16 @@ class User implements UserInterface, \Serializable
 
     public function __toString()
     {
-        return (string) $this->getEmail();
+        return sprintf('%s <%s>', $this->getName(), $this->getEmail());
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        $gender = $this->gender ? ($this->gender === GenderEnum::MALE ? 'M.' : 'Mme.') : '';
+        return ucwords(trim(sprintf('%s %s %s', $gender, $this->firstname, $this->lastname)));
     }
 
     public function serialize()
