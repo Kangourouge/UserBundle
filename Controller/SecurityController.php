@@ -52,7 +52,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * @Route("/restricted/test", name="krg_user_restricted")
+     * @Route("/restricted", name="krg_user_restricted")
      * @Template
      */
     public function restrictedAction(Request $request)
