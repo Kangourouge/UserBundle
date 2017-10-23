@@ -26,7 +26,8 @@ services:
         tags: [kernel.event_subscriber]
 
     KRG\UserBundle\Util\:
-         resource: '../../Util'
+        resource: '../../Util'
+        public: true
 
     KRG\UserBundle\EventListener\AuthenticationListener:
         arguments:
