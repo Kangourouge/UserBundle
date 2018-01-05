@@ -109,4 +109,5 @@ class RegistrationType extends \KRG\UserBundle\Form\Type\RegistrationType
 services:
     AppBundle\Form\Type\RegistrationType:
         decorates: KRG\UserBundle\Form\Type\RegistrationType
+        autoconfigure: false
 ```
