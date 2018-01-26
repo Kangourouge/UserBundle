@@ -3,14 +3,18 @@ form:
     firstname: Prénom
     lastname: Nom
     password: 'Mot de passe'
-    password_confirmation: 'Répéter le mot de passe'
+    new_password: 'Nouveau mot de passe'
+    new_password_confirmation: 'Confirmer le nouveau mot de passe'
+    password_confirmation: 'Confirmation mot de passe'
     current_password: 'Mot de passe actuel'
-    terms: 'Conditions générales'
+    terms: J'accepte les conditions générales d'utilisation
     submit: Envoyer
     submit_registration: Inscription
     submit_profile: 'Mettre à jour mon profil'
     submit_change_password: 'Mettre à jour mon mot de passe'
     submit_reset_password: 'Réinitialiser mon mot de passe'
+    error:
+        password: 'missmatch'
 
 security:
     login:
@@ -18,6 +22,8 @@ security:
         password: 'Mot de passe'
         remember_me: 'Se souvenir de moi'
         submit: Connexion
+        forgot_password: Mot de passe oublié ?
+        error: Votre adresse mail ou votre mot de passe sont incorrects.
     restricted:
         message: Vous n'avez pas les autorisations nécessaires pour accéder à cette page.
 
@@ -45,6 +51,7 @@ registration:
     check_email: 'Un e-mail a été envoyé à l''adresse %email%. Il contient un lien d''activation sur lequel il vous faudra cliquer afin d''activer votre compte.'
     confirmed: 'Félicitations %username%, votre compte est maintenant activé.'
     back: 'Retour à la page d''origine.'
+    error: 'Votre adresse mail est déjà utilisée'
 
 profile:
     flash:

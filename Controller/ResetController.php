@@ -93,7 +93,8 @@ class ResetController extends AbstractController
             $userManager->processConfirmation($user);
             $userManager->updateUser($user, true);
 
-            $dispatcher = $this->get('event_dispatcher');
+            /** @var $dispatcher EventDispatcherInterface */
+            $dispatcher = $this->container->get(EventDispatcherInterface::class);
             $event = new FormEvent($form, $request);
             $dispatcher->dispatch(KRGUserEvents::RESETTING_RESET_COMPLETED, $event);
 

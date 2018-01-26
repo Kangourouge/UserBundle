@@ -20,8 +20,8 @@ class ChangePasswordType extends AbstractType
         ])
         ->add('plainPassword', RepeatedType::class, [
             'type'            => PasswordType::class,
-            'first_options'   => ['label' => 'form.password'],
-            'second_options'  => ['label' => 'form.password_confirmation'],
+            'first_options'   => ['label' => 'form.new_password'],
+            'second_options'  => ['label' => 'form.new_password_confirmation'],
             'invalid_message' => 'Mismatch', // TODO: translate
             'required'        => true
         ]);

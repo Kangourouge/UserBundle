@@ -2,6 +2,7 @@
 
 namespace KRG\UserBundle\Controller;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use KRG\UserBundle\Entity\UserInterface;
 use KRG\UserBundle\Form\Type\RegistrationType;
 use KRG\UserBundle\Manager\LoginManagerInterface;
@@ -16,6 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,19 +48,29 @@ class RegistrationController extends AbstractController
         $user = $userManager->createUser();
         $user->setEnabled(true);
 
-        $form = $this->createForm(RegistrationType::class)
+        $form = $this->createForm(RegistrationType::class, null, [
+            'action' => $this->generateUrl('krg_user_registration_register')
+        ])
             ->setData($user)
             ->add('submit', SubmitType::class, ['label' => 'form.submit_registration']);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /* @var $dispatcher EventDispatcherInterface */
-            $dispatcher = $this->container->get(EventDispatcherInterface::class);
-            $event = new FormEvent($form, $request);
-            $dispatcher->dispatch(KRGUserEvents::REGISTRATION_SUCCESS, $event);
-            $userManager->updateUser($user, true);
+            try {
 
-            return $event->getResponse();
+                /* @var $dispatcher EventDispatcherInterface */
+                $dispatcher = $this->container->get(EventDispatcherInterface::class);
+                $event = new FormEvent($form, $request);
+                $dispatcher->dispatch(KRGUserEvents::REGISTRATION_SUCCESS, $event);
+                $userManager->updateUser($user, true);
+
+                return $event->getResponse();
+            } catch (UniqueConstraintViolationException $exception) {
+                $form->addError(new FormError('Votre adresse mail est déjà utilisée'));
+            } catch (\Exception $exception) {
+                $form->addError(new FormError('Error'));
+            }
+
         }
 
         return [
@@ -149,7 +161,7 @@ class RegistrationController extends AbstractController
         }
 
         return [
-            'user'      => $user,
+            'user' => $user,
             'targetUrl' => $targetUrl,
         ];
     }
@@ -158,10 +170,10 @@ class RegistrationController extends AbstractController
     {
         return array_merge(
             parent::getSubscribedServices(), [
-            '?'.LoginManagerInterface::class,
-            '?'.UserManagerInterface::class,
-            '?'.EventDispatcherInterface::class,
-            '?'.SessionInterface::class
+            '?' . LoginManagerInterface::class,
+            '?' . UserManagerInterface::class,
+            '?' . EventDispatcherInterface::class,
+            '?' . SessionInterface::class
         ]);
     }
 
