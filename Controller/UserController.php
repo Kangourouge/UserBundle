@@ -19,14 +19,10 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * @Route("/profile")
- */
 class UserController extends AbstractController
 {
     /**
-     * @Route("", name="krg_user_show")
-     * @Template
+     * @Route("/profile", name="krg_user_show")
      */
     public function showAction()
     {
@@ -36,14 +32,13 @@ class UserController extends AbstractController
             throw new AccessDeniedException('This user does not have access to this section.');
         }
 
-        return [
+        return $this->render('KRGUserBundle:User:show.html.twig', [
             'user' => $this->getUser()
-        ];
+        ]);
     }
 
     /**
-     * @Route("/edit", name="krg_user_edit")
-     * @Template
+     * @Route("/profile/edit", name="krg_user_edit")
      */
     public function editAction(Request $request)
     {
@@ -70,14 +65,13 @@ class UserController extends AbstractController
             return $this->redirectToRoute('krg_user_show');
         }
 
-        return [
-            'form' => $form->createView()
-        ];
+        return $this->render('KRGUserBundle:User:edit.html.twig',[
+            'form' => $form->createView(), 'user' => $user,
+        ]);
     }
 
     /**
-     * @Route("/change-password", name="krg_user_change_password")
-     * @Template
+     * @Route("/profile/change-password", name="krg_user_change_password")
      */
     public function changePasswordAction(Request $request)
     {
@@ -108,9 +102,9 @@ class UserController extends AbstractController
             return $this->redirectToRoute('krg_user_show');
         }
 
-        return [
-            'form' => $form->createView()
-        ];
+        return $this->render('KRGUserBundle:User:changePassword.html.twig', [
+            'form' => $form->createView(), 'user' => $user,
+        ]);
     }
 
     public static function getSubscribedServices()
