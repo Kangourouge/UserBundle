@@ -9,6 +9,8 @@ Configuration
 krg_user:
     registration:
         confirmed_target_route: homepage 
+    login:
+        admin_redirect_route: easyadmin
 
 doctrine:
     dbal:
@@ -64,8 +66,7 @@ security:
 
 ```
 
-Entity
-------
+## User entity
 
 ```php
 <?php
@@ -83,8 +84,22 @@ class User extends \KRG\UserBundle\Entity\User
 }
 ```
 
-Override
---------
+## Admin
+
+
+EasyAdmin configuration:
+
+```yaml
+# app/config/admin.yml
+
+parameters:
+    krg_cms.user.class: AppBundle\Entity\User
+
+imports:
+    - { resource: '@KRGUserBundle/Resources/config/easyadmin/*.yml' }
+```
+
+## Override form type
 
 ```php
 <?php
@@ -109,5 +124,4 @@ class RegistrationType extends \KRG\UserBundle\Form\Type\RegistrationType
 services:
     AppBundle\Form\Type\RegistrationType:
         decorates: KRG\UserBundle\Form\Type\RegistrationType
-        autoconfigure: false
 ```

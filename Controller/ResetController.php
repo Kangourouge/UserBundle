@@ -15,7 +15,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -26,18 +25,16 @@ class ResetController extends AbstractController
 {
     /**
      * @Route("", name="krg_user_reset_request")
-     * @Template
      */
     public function requestAction(Request $request)
     {
         $this->container->get(LoginManagerInterface::class)->disconnectIfLogged();
 
-        return [];
+        return $this->render('KRGUserBundle:Reset:request.html.twig');
     }
 
     /**
      * @Route("/send", name="krg_user_reset_request_send")
-     * @Template
      */
     public function sendEmailAction(Request $request)
     {
@@ -61,15 +58,11 @@ class ResetController extends AbstractController
             return $this->redirectToRoute('krg_user_reset_request_send');
         }
 
-        return [];
+        return $this->render('KRGUserBundle:Reset:sendEmail.html.twig');
     }
 
     /**
      * @Route("/check/{token}", name="krg_user_reset")
-     * @Template
-     * @param Request $request
-     * @param $token
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function resetAction(Request $request, $token)
     {
@@ -104,9 +97,9 @@ class ResetController extends AbstractController
             return $this->redirectToRoute('krg_user_login');
         }
 
-        return [
+        return $this->render('KRGUserBundle:Reset:reset.html.twig', [
             'form' => $form->createView(),
-        ];
+        ]);
     }
 
     public static function getSubscribedServices()

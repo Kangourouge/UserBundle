@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the FOSUserBundle package.
- *
- * (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace KRG\UserBundle\Command;
 
 use KRG\UserBundle\Util\UserManipulator;
@@ -19,14 +10,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
-/**
- * @author Lenar Lõhmus <lenar@city.ee>
- */
 abstract class RoleCommand extends ContainerAwareCommand
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this
@@ -37,9 +22,6 @@ abstract class RoleCommand extends ContainerAwareCommand
             ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $username = $input->getArgument('username');
@@ -57,20 +39,8 @@ abstract class RoleCommand extends ContainerAwareCommand
         $this->executeRoleCommand($manipulator, $output, $username, $super, $role);
     }
 
-    /**
-     * @see Command
-     *
-     * @param UserManipulator $manipulator
-     * @param OutputInterface $output
-     * @param string          $username
-     * @param bool            $super
-     * @param string          $role
-     */
     abstract protected function executeRoleCommand(UserManipulator $manipulator, OutputInterface $output, $username, $super, $role);
 
-    /**
-     * {@inheritdoc}
-     */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $questions = [];

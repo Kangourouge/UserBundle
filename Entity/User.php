@@ -73,7 +73,6 @@ class User implements UserInterface, \Serializable
     protected $plainPassword;
 
     /**
-     * TODO: listen and update that!
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $lastLogin;

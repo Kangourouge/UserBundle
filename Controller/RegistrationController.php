@@ -36,7 +36,6 @@ class RegistrationController extends AbstractController
 
     /**
      * @Route("", name="krg_user_registration_register")
-     * @Template
      */
     public function registerAction(Request $request)
     {
@@ -57,7 +56,6 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-
                 /* @var $dispatcher EventDispatcherInterface */
                 $dispatcher = $this->container->get(EventDispatcherInterface::class);
                 $event = new FormEvent($form, $request);
@@ -70,18 +68,17 @@ class RegistrationController extends AbstractController
             } catch (\Exception $exception) {
                 $form->addError(new FormError('Error'));
             }
-
         }
 
-        return [
+        return $this->render('KRGUserBundle:Registration:register.html.twig', [
             'form' => $form->createView(),
-        ];
+        ]);
     }
 
     /**
      * Tell the user to check their email provider.
+     *
      * @Route("/check_email", name="krg_user_registration_check_email")
-     * @Template
      */
     public function checkEmailAction(Request $request)
     {
@@ -99,17 +96,13 @@ class RegistrationController extends AbstractController
             throw new NotFoundHttpException(sprintf('The user with email "%s" does not exist', $email));
         }
 
-        return [
+        return $this->render('KRGUserBundle:Registration:checkEmail.html.twig', [
             'user' => $user
-        ];
+        ]);
     }
 
     /**
      * Receive the confirmation token from user email provider, login the user.
-     * @Route("/confirm/{token}", name="krg_user_registration_confirm")
-     * @param Request $request
-     * @param $token
-     * @return Response
      */
     public function confirmAction(Request $request, $token)
     {
@@ -142,10 +135,6 @@ class RegistrationController extends AbstractController
 
     /**
      * @Route("/confirmed", name="krg_user_registration_confirmed")
-     * @Template
-     *
-     * @param Request $request
-     * @return array
      */
     public function confirmedAction(Request $request)
     {
@@ -160,10 +149,10 @@ class RegistrationController extends AbstractController
             $targetUrl = $this->generateUrl($this->confirmedTargetRoute);
         }
 
-        return [
-            'user' => $user,
+        return $this->render('KRGUserBundle:Registration:confirmed.html.twig', [
+            'user'      => $user,
             'targetUrl' => $targetUrl,
-        ];
+        ]);
     }
 
     public static function getSubscribedServices()

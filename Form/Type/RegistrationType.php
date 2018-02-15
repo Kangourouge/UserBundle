@@ -24,7 +24,6 @@ class RegistrationType extends AbstractType
             ->add('email', EmailType::class)
             ->add('firstname', TextType::class)
             ->add('lastname', TextType::class)
-            ->add('email', EmailType::class)
             ->add('plainPassword', RepeatedType::class, [
                 'type'            => PasswordType::class,
                 'first_options'   => ['label' => 'form.password'],

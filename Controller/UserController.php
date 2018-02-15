@@ -103,7 +103,8 @@ class UserController extends AbstractController
         }
 
         return $this->render('KRGUserBundle:User:changePassword.html.twig', [
-            'form' => $form->createView(), 'user' => $user,
+            'form' => $form->createView(),
+            'user' => $user,
         ]);
     }
 

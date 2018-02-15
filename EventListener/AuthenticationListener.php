@@ -35,17 +35,6 @@ class AuthenticationListener implements EventSubscriberInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public static function getSubscribedEvents()
-    {
-        return [
-            KRGUserEvents::REGISTRATION_COMPLETED => 'authenticate',
-            KRGUserEvents::REGISTRATION_CONFIRMED => 'authenticate',
-        ];
-    }
-
-    /**
      * @param FilterUserResponseEvent  $event
      * @param string                   $eventName
      * @param EventDispatcherInterface $eventDispatcher
@@ -60,5 +49,13 @@ class AuthenticationListener implements EventSubscriberInterface
             // We simply do not authenticate users which do not pass the user
             // checker (not enabled, expired, etc.).
         }
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            KRGUserEvents::REGISTRATION_COMPLETED => 'authenticate',
+            KRGUserEvents::REGISTRATION_CONFIRMED => 'authenticate',
+        ];
     }
 }

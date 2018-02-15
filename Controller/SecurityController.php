@@ -14,7 +14,6 @@ class SecurityController extends AbstractController
 {
     /**
      * @Route("/login", name="krg_user_login")
-     * @Template
      */
     public function loginAction(Request $request)
     {
@@ -23,10 +22,10 @@ class SecurityController extends AbstractController
         $error = $authUtils->getLastAuthenticationError();
         $lastUsername = $authUtils->getLastUsername();
 
-        return [
+        return $this->render('KRGUserBundle:Security:login.html.twig', [
             'last_username' => $lastUsername,
             'error'         => $error,
-        ];
+        ]);
     }
 
     /**
@@ -53,11 +52,10 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/restricted", name="krg_user_restricted")
-     * @Template
      */
     public function restrictedAction(Request $request)
     {
-        return [];
+        return $this->render('KRGUserBundle:Security:restricted.html.twig');
     }
 
     public static function getSubscribedServices()
