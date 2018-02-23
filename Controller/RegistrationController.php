@@ -11,7 +11,6 @@ use KRG\UserBundle\Event\FilterUserResponseEvent;
 use KRG\UserBundle\Event\FormEvent;
 use KRG\UserBundle\Event\GetResponseUserEvent;
 use KRG\UserBundle\KRGUserEvents;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -20,9 +19,9 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @Route("/register")
@@ -102,6 +101,7 @@ class RegistrationController extends AbstractController
     }
 
     /**
+     * @Route("/confirm/{token}", name="krg_user_registration_confirm")
      * Receive the confirmation token from user email provider, login the user.
      */
     public function confirmAction(Request $request, $token)
@@ -140,6 +140,8 @@ class RegistrationController extends AbstractController
     {
         /* @var $user UserInterface */
         $user = $this->getUser();
+
+
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
@@ -155,7 +157,7 @@ class RegistrationController extends AbstractController
      */
     private function getTargetUrlFromSession(SessionInterface $session)
     {
-        $key = sprintf('_security.%s.target_path', $this->tokenStorage->getToken()->getProviderKey());
+        $key = sprintf('_security.%s.target_path', $this->get(TokenStorageInterface::class)->getToken()->getProviderKey());
         if ($session->has($key)) {
             return $session->get($key);
         }
@@ -170,7 +172,8 @@ class RegistrationController extends AbstractController
             '?' . LoginManagerInterface::class,
             '?' . UserManagerInterface::class,
             '?' . EventDispatcherInterface::class,
-            '?' . SessionInterface::class
+            '?' . SessionInterface::class,
+            '?' . TokenStorageInterface::class
         ]);
     }
 
