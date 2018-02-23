@@ -9,10 +9,14 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
 use Symfony\Component\Security\Http\HttpUtils;
+use Symfony\Component\Security\Http\ParameterBagUtils;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
+    use TargetPathTrait;
+
     /**
      * @var RouterInterface
      */
@@ -54,6 +58,22 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         // TODO: ici pour peut tester si le Profil est complet et rediriger vers l'edition de profil
 
         return $this->httpUtils->createRedirectResponse($request, $path);
+    }
+
+    /**
+     * Builds the target URL according to the defined options.
+     *
+     * @return string
+     */
+    protected function determineTargetUrl(Request $request)
+    {
+        $session = $request->getSession();
+        $key = sprintf('_security.%s.target_path', $this->providerKey);
+        if ($session->has($key)) {
+            return $session->get($key);
+        }
+
+        return parent::determineTargetUrl($request);
     }
 
     /**

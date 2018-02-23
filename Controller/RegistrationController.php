@@ -144,15 +144,23 @@ class RegistrationController extends AbstractController
             throw new AccessDeniedException('This user does not have access to this section.');
         }
 
-        $targetUrl = null;
-        if ($this->confirmedTargetRoute) {
-            $targetUrl = $this->generateUrl($this->confirmedTargetRoute);
-        }
-
         return $this->render('KRGUserBundle:Registration:confirmed.html.twig', [
             'user'      => $user,
-            'targetUrl' => $targetUrl,
+            'targetUrl' => $this->confirmedTargetRoute ? $this->generateUrl($this->confirmedTargetRoute) : $this->getTargetUrlFromSession($request->getSession()),
         ]);
+    }
+
+    /**
+     * @return string|null
+     */
+    private function getTargetUrlFromSession(SessionInterface $session)
+    {
+        $key = sprintf('_security.%s.target_path', $this->tokenStorage->getToken()->getProviderKey());
+        if ($session->has($key)) {
+            return $session->get($key);
+        }
+
+        return null;
     }
 
     public static function getSubscribedServices()
