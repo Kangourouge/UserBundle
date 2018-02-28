@@ -31,7 +31,7 @@ class RegistrationController extends AbstractController
     /**
      * @var string
      */
-    private $confirmedTargetRoute;
+    protected $confirmedTargetRoute;
 
     /**
      * @Route("", name="krg_user_registration_register")
@@ -155,7 +155,7 @@ class RegistrationController extends AbstractController
     /**
      * @return string|null
      */
-    private function getTargetUrlFromSession(SessionInterface $session)
+    protected function getTargetUrlFromSession(SessionInterface $session)
     {
         $key = sprintf('_security.%s.target_path', $this->get(TokenStorageInterface::class)->getToken()->getProviderKey());
         if ($session->has($key)) {
