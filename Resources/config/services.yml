@@ -23,9 +23,13 @@ services:
     krg_user.form.registration:
         alias: KRG\UserBundle\Form\Type\RegistrationType
 
-    KRG\UserBundle\EventListener\:
-        resource: '../../EventListener'
+    KRG\UserBundle\Event\Subscriber\:
+        resource: '../../Event/Subscriber'
         tags: [kernel.event_subscriber]
+
+    KRG\UserBundle\Event\Listener\PrivateDataListener:
+        tags:
+            - { name: doctrine.event_listener, event: preSoftDelete }
 
     KRG\UserBundle\Util\:
         resource: '../../Util'

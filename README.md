@@ -125,3 +125,30 @@ services:
     AppBundle\Form\Type\RegistrationType:
         decorates: KRG\UserBundle\Form\Type\RegistrationType
 ```
+
+## PrivateData annotation
+
+PrivateData annotation reset property value on softDelete.
+
+Usage:
+
+```php
+<?php
+
+use KRG\UserBundle\Annotation\PrivateData;
+
+class User 
+{
+    /**
+     * @PrivateData(replaceWith="John")
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $firstname;
+
+    /**
+     * @PrivateData(domain="kangourouge.com")
+     * @ORM\Column(type="string", unique=true)
+     */
+    protected $email;
+}
+```

@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\UserBundle\EventListener;
+namespace KRG\UserBundle\Event\Subscriber;
 
 use KRG\MessageBundle\Event\MessageEvents;
 use KRG\UserBundle\Entity\UserInterface;

@@ -5,9 +5,9 @@ namespace KRG\UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use KRG\UserBundle\Annotation\PrivateData;
 use KRG\UserBundle\Doctrine\DBAL\GenderEnum;
 use KRG\UserBundle\Util\Canonicalizer;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\MappedSuperclass(repositoryClass="KRG\UserBundle\Repository\UserRepository")
@@ -36,6 +36,7 @@ class User implements UserInterface, \Serializable
     protected $gender;
 
     /**
+     * @PrivateData(domain="kangourouge.com")
      * @ORM\Column(type="string", unique=true)
      */
     protected $email;
@@ -46,11 +47,13 @@ class User implements UserInterface, \Serializable
     protected $emailCanonical;
 
     /**
+     * @PrivateData(replaceWith="John")
      * @ORM\Column(type="string", nullable=true)
      */
     protected $firstname;
 
     /**
+     * @PrivateData(replaceWith="Doe")
      * @ORM\Column(type="string", nullable=true)
      */
     protected $lastname;
@@ -117,7 +120,7 @@ class User implements UserInterface, \Serializable
     public function getName()
     {
         $gender = $this->gender ? ($this->gender === GenderEnum::MALE ? 'M.' : 'Mme.') : '';
-        
+
         return ucwords(trim(sprintf('%s %s %s', $gender, $this->firstname, $this->lastname)));
     }
 
@@ -132,6 +135,7 @@ class User implements UserInterface, \Serializable
             $this->enabled
         ]);
     }
+
     public function unserialize($serialized)
     {
         list (
