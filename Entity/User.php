@@ -8,6 +8,8 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 use KRG\UserBundle\Annotation\PrivateData;
 use KRG\UserBundle\Doctrine\DBAL\GenderEnum;
 use KRG\UserBundle\Util\Canonicalizer;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\MappedSuperclass(repositoryClass="KRG\UserBundle\Repository\UserRepository")
@@ -72,6 +74,15 @@ class User implements UserInterface, \Serializable
 
     /**
      * @var string
+     * @Assert\Length(
+     *      min = 8,
+     *      minMessage = "Your password must be at least {{ limit }} characters long"
+     * )
+     *
+     * @Assert\Regex(
+     *     pattern     = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W)+$/i",
+     *     message = "Non-compliant password"
+     * )
      */
     protected $plainPassword;
 
