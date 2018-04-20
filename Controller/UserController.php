@@ -108,6 +108,22 @@ class UserController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("profile/delete", name="krg_user_delete")
+     */
+    public function deleteAction()
+    {
+        /* @var $user UserInterface */
+        $user = $this->getUser();
+
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('krg_user_login');
+    }
+
     public static function getSubscribedServices()
     {
         return array_merge(

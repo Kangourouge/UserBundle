@@ -11,8 +11,10 @@ use KRG\UserBundle\Util\Canonicalizer;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 /**
  * @ORM\MappedSuperclass(repositoryClass="KRG\UserBundle\Repository\UserRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class User implements UserInterface, \Serializable
 {
@@ -80,7 +82,7 @@ class User implements UserInterface, \Serializable
      * )
      *
      * @Assert\Regex(
-     *     pattern     = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W)+$/i",
+     *     pattern     = "#^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W)#",
      *     message = "Non-compliant password"
      * )
      */
