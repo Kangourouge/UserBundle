@@ -1,0 +1,10 @@
+imports:
+    - { resource: easyadmin/ }
+
+easy_admin:
+    design:
+        menu:
+            -
+                label: 'Security'
+                children:
+                    - { entity: 'User', icon: 'users' }

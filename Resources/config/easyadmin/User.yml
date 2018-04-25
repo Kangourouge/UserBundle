@@ -1,12 +1,13 @@
 easy_admin:
     entities:
         User:
-            class: '%krg_cms.user.class%'
+            class: 'KRG\UserBundle\Entity\UserInterface'
+            controller: KRG\UserBundle\Controller\AdminController
             list:
-                title:  '<i class="fa fa-users-large"></i> User'
+                title:  '<i class="fa fa-users"></i> User'
+                actions:
+                    - { name: 'switch', icon: 'user-secret', css_class: 'btn btn-warning', route: 'krg_user_admin_switch', roles: ['ROLE_ALLOWED_TO_SWITCH'] }
                 fields:
-                    -
-                        property: 'enabled'
                     -
                         property: 'email'
                     -
@@ -15,23 +16,24 @@ easy_admin:
                         property: 'lastname'
                     -
                         property: 'createdAt'
-                        label: 'Registered at'
                     -
                         property: 'lastLogin'
+                    -
+                        property: 'enabled'
             edit:
                 fields:
-                    - { property: 'enabled' }
                     - { property: 'email' }
                     - { property: 'firstname' }
                     - { property: 'lastname' }
                     - { property: 'roles', type: 'choice', type_options: { multiple: true, choices: { 'ROLE_USER': 'ROLE_USER', 'ROLE_ADMIN': 'ROLE_ADMIN' } } }
+                    - { property: 'enabled' }
                 form_options: { validation_groups: ['Profile'] }
             new:
                 fields:
-                    - { property: 'enabled' }
                     - { property: 'email' }
                     - { property: 'firstname' }
                     - { property: 'lastname' }
                     - { property: 'plainPassword', type: 'text', 'label': 'Password', type_options: { required: true } }
                     - { property: 'roles', type: 'choice', type_options: { multiple: true, choices: { 'ROLE_USER': 'ROLE_USER', 'ROLE_ADMIN': 'ROLE_ADMIN' } } }
+                    - { property: 'enabled' }
                 form_options: { validation_groups: ['Registration'] }
