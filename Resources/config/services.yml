@@ -27,6 +27,9 @@ services:
         resource: '../../Event/Subscriber'
         tags: [kernel.event_subscriber]
 
+    KRG\UserBundle\Event\Subscriber\UserListener:
+        tags: ['doctrine.event_subscriber']
+
     KRG\UserBundle\Event\Listener\PrivateDataListener:
         tags:
             - { name: doctrine.event_listener, event: preSoftDelete }
