@@ -1,0 +1,36 @@
+form.email: 'E-mail adress'
+form.firstname: Firstname
+form.lastname: Lastname
+form.password: Password
+form.new_password: 'New Password'
+form.new_password_confirmation: 'Confirm the new password'
+form.password_confirmation: 'Password confirmation'
+form.current_password: 'Current Password'
+form.terms: 'I accept the general terms of use'
+form.submit: Send
+form.submit_registration: Registration
+form.submit_profile: 'Update profile'
+form.submit_change_password: 'Change the password'
+form.submit_reset_password: 'Reset password'
+form.error.password: missmatch
+security.login.username: 'E-mail adress'
+security.login.password: Password
+security.login.remember_me: 'Remember me'
+security.login.submit: Log in
+security.login.forgot_password: 'Forgot your password ?'
+security.login.error: 'Your email address or password is incorrect.'
+security.restricted.message: 'You do not have the necessary permissions to access this page.'
+layout.logout: 'Log out'
+layout.login: 'Log in'
+layout.register: Registration
+layout.logged_in_as: 'Connected as %username%'
+resetting.request.check_email: 'An email has been sent. It contains a link that you will need to click to reset your password.\n\nIf you do not receive an email, check your spam folder or try again. \n'
+resetting.request.username: 'E-mail adress'
+resetting.request.submit: 'Reset password'
+change_password.submit: 'Change the password'
+change_password.flash.success: 'The password has been changed.'
+registration.check_email: 'An email has been sent to %email%. It contains an activation link that you will need to click in order to activate your account.'
+registration.confirmed: 'Congratulations %username%, your account is now activated.'
+registration.back: 'Back to the original page.'
+registration.error: 'Your email address is already used.'
+profile.flash.success: 'Your profile has been updated.'
