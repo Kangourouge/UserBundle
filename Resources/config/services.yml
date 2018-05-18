@@ -53,3 +53,8 @@ services:
         alias: security.http_utils
     Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface:
         alias: security.authentication.session_strategy
+
+    KRG\UserBundle\Toolbar\:
+        resource: '../../Toolbar'
+        tags: ['krg.easyadmin.toolbar']
+        public: true

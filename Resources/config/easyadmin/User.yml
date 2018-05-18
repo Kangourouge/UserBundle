@@ -6,7 +6,7 @@ easy_admin:
             list:
                 title:  '<i class="fa fa-users"></i> User'
                 actions:
-                    - { name: 'switch', icon: 'user-secret', css_class: 'btn btn-warning', route: 'krg_user_admin_switch', roles: ['ROLE_ALLOWED_TO_SWITCH'] }
+                    - { name: 'switch', icon: 'user-secret', css_class: 'btn btn-secondary', route: 'krg_user_admin_switch', roles: ['ROLE_ALLOWED_TO_SWITCH'] }
                 fields:
                     -
                         property: 'email'
