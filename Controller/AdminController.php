@@ -20,7 +20,7 @@ class AdminController extends \EasyCorp\Bundle\EasyAdminBundle\Controller\AdminC
         } elseif ($this->isGranted('ROLE_PREVIOUS_ADMIN')) {
             $error = 'switch.twice';
         } else {
-            return $this->redirectToRoute('homepage', ['_switch_user' => $entity->getUsername()]);
+            return $this->redirect(sprintf('%s?_switch_user=%s', $this->generateUrl('homepage'), $entity->getUsername()));
         }
 
         $this->addFlash('danger', $this->get('translator')->trans($error, [], 'error'));
