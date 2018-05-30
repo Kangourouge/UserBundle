@@ -4,7 +4,7 @@ easy_admin:
             class: 'KRG\UserBundle\Entity\UserInterface'
             controller: KRG\UserBundle\Controller\AdminController
             list:
-                title:  '<i class="fa fa-users"></i> User'
+                title: '<i class="fa fa-users"></i> User'
                 actions:
                     - { name: 'switch', icon: 'user-secret', css_class: 'btn btn-secondary', route: 'krg_user_admin_switch', roles: ['ROLE_ALLOWED_TO_SWITCH'] }
                 fields:
