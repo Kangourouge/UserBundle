@@ -2,11 +2,11 @@ easy_admin:
     entities:
         User:
             class: 'KRG\UserBundle\Entity\UserInterface'
-            controller: KRG\UserBundle\Controller\AdminController
+            controller: 'KRG\UserBundle\Controller\AdminController'
             list:
-                title: '<i class="fa fa-users"></i> User'
+                title: '<i class="fa fa-users"></i> Users'
                 actions:
-                    - { name: 'switch', icon: 'user-secret', css_class: 'btn btn-secondary', route: 'krg_user_admin_switch', roles: ['ROLE_ALLOWED_TO_SWITCH'] }
+                    - { name: 'switch', icon: 'user-secret', css_class: 'btn btn-secondary', route: 'krg_user_admin_switch', roles: ['ROLE_ALLOWED_TO_SWITCH'], menu_dropdown: true }
                 fields:
                     -
                         property: 'email'
@@ -17,6 +17,7 @@ easy_admin:
                     -
                         property: 'createdAt'
                     -
+                        label: 'lastLogin'
                         property: 'lastLogin'
                     -
                         property: 'enabled'

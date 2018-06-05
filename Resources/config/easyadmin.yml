@@ -6,5 +6,6 @@ easy_admin:
         menu:
             -
                 label: 'Security'
+                priority: 1
                 children:
-                    - { entity: 'User', icon: 'users' }
+                    - { entity: 'User', icon: 'users', label: 'Users' }

@@ -1,14 +1,14 @@
 Security: Sécurité
-User: Utilisateurs
-"<i class=\"fa fa-users\"></i> User": "<i class=\"fa fa-users\"></i> Utilisateurs"
+Users: Utilisateurs
+"<i class=\"fa fa-users\"></i> Users": "<i class=\"fa fa-users\"></i> Utilisateurs"
 email: Email
 password: Mot de passe
 gender: Civilité
-firstname: Prénom
-lastname: Nom
+Firstname: Prénom
+Lastname: Nom
 createdAt: Date de création
 updatedAt: Date de modification
 deletedAt: Date de suppression
-lastLogin: Derniere connexion
+lastLogin: Dernière connexion
 roles: Rôles
 enabled: Actif
