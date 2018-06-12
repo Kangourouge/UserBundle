@@ -1,5 +1,5 @@
 <div class="krg-toolbar-block">
-    <a href="#">
+    <a href="{{ path('easyadmin', {'_switch_user': '_exit'}) }}">
         {{ include('@KRGUser/icon/user.svg') }} {{ 'connected_as'|trans({'%user%': app.user.email}, 'toolbar') }}
     </a>
 </div>
