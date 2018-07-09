@@ -12,7 +12,7 @@ form.submit_registration: Registration
 form.submit_profile: 'Update profile'
 form.submit_change_password: 'Change the password'
 form.submit_reset_password: 'Reset password'
-form.error.password: missmatch
+form.error.password: 'The entered passwords don''t match.'
 security.login.username: 'E-mail adress'
 security.login.password: Password
 security.login.remember_me: 'Remember me'

@@ -28,7 +28,7 @@ class RegistrationType extends AbstractType
                 'type'            => PasswordType::class,
                 'first_options'   => ['label' => 'form.password'],
                 'second_options'  => ['label' => 'form.password_confirmation'],
-                'invalid_message' => 'Mismatch', // TODO: translate
+                'invalid_message' => 'form.error.password',
                 'required'        => true,
             ])
             ->add('terms', CheckboxType::class, [

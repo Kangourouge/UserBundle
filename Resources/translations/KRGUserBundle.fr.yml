@@ -12,7 +12,7 @@ form.submit_registration: Inscription
 form.submit_profile: 'Mettre à jour mon profil'
 form.submit_change_password: 'Mettre à jour mon mot de passe'
 form.submit_reset_password: 'Réinitialiser mon mot de passe'
-form.error.password: missmatch
+form.error.password: 'Les deux mots de passe ne sont pas identiques.'
 security.login.username: 'Adresse email'
 security.login.password: 'Mot de passe'
 security.login.remember_me: 'Se souvenir de moi'
