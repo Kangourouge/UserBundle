@@ -12,17 +12,28 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
+    /** @var LoginManagerInterface */
+    protected $loginManager;
+
+    /** @var AuthenticationUtils */
+    protected $authenticationUtils;
+
+    public function __construct(LoginManagerInterface $loginManager, AuthenticationUtils $authenticationUtils)
+    {
+        $this->loginManager = $loginManager;
+        $this->authenticationUtils = $authenticationUtils;
+    }
+
     /**
      * @Route("/login", name="krg_user_login")
      */
     public function loginAction(Request $request)
     {
-        $this->container->get(LoginManagerInterface::class)->disconnectIfLogged();
-        $authUtils = $this->container->get(AuthenticationUtils::class);
-        $error = $authUtils->getLastAuthenticationError();
-        $lastUsername = $authUtils->getLastUsername();
+        $this->loginManager->disconnectIfLogged();
+        $error = $this->authenticationUtils->getLastAuthenticationError();
+        $lastUsername = $this->authenticationUtils->getLastUsername();
 
-        return $this->render('KRGUserBundle:Security:login.html.twig', [
+        return $this->render('@KRGUser/security/login.html.twig', [
             'last_username' => $lastUsername,
             'error'         => $error,
         ]);
@@ -55,15 +66,6 @@ class SecurityController extends AbstractController
      */
     public function restrictedAction(Request $request)
     {
-        return $this->render('KRGUserBundle:Security:restricted.html.twig');
-    }
-
-    public static function getSubscribedServices()
-    {
-        return array_merge(
-            parent::getSubscribedServices(), [
-            '?'.LoginManagerInterface::class,
-            '?'.AuthenticationUtils::class
-        ]);
+        return $this->render('@KRGUser/security/restricted.html.twig');
     }
 }

@@ -21,6 +21,22 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
 {
+    /** @var UserManagerInterface */
+    protected $userManager;
+
+    /** @var EventDispatcherInterface */
+    protected $eventDispatcher;
+
+    /** @var TranslatorInterface */
+    protected $translator;
+
+    public function __construct(UserManagerInterface $userManager, EventDispatcherInterface $eventDispatcher, TranslatorInterface $translator)
+    {
+        $this->userManager = $userManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->translator = $translator;
+    }
+
     /**
      * @Route("/profile", name="krg_user_show")
      */
@@ -32,7 +48,7 @@ class UserController extends AbstractController
             throw new AccessDeniedException('This user does not have access to this section.');
         }
 
-        return $this->render('KRGUserBundle:User:show.html.twig', [
+        return $this->render('@KRGUser/security/show.html.twig', [
             'user' => $this->getUser()
         ]);
     }
@@ -54,18 +70,16 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /* @var $userManager UserManagerInterface */
-            $userManager = $this->container->get(UserManagerInterface::class);
             $user = $form->getData();
-            $userManager->updateUser($user, true);
+            $this->userManager->updateUser($user, true);
 
-            $flashMessage = $this->container->get(TranslatorInterface::class)->trans('profile.flash.success', [], 'KRGUserBundle');
+            $flashMessage = $this->translator->trans('profile.flash.success', [], 'KRGUserBundle');
             $this->addFlash('notice', $flashMessage);
 
             return $this->redirectToRoute('krg_user_show');
         }
 
-        return $this->render('KRGUserBundle:User:edit.html.twig',[
+        return $this->render('@KRGUser/security/edit.html.twig',[
             'form' => $form->createView(), 'user' => $user,
         ]);
     }
@@ -87,22 +101,17 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /* @var $userManager UserManagerInterface */
-            $userManager = $this->container->get(UserManagerInterface::class);
             /* @var $user UserInterface */
             $user = $form->getData();
-            $userManager->updateUser($user, true);
-
-            $dispatcher = $this->container->get(EventDispatcherInterface::class);
-            $dispatcher->dispatch(KRGUserEvents::CHANGE_PASSWORD_COMPLETED, new FormEvent($form, $request));
-
-            $flashMessage = $this->container->get(TranslatorInterface::class)->trans('change_password.flash.success', [], 'KRGUserBundle');
+            $this->userManager->updateUser($user, true);
+            $this->eventDispatcher->dispatch(KRGUserEvents::CHANGE_PASSWORD_COMPLETED, new FormEvent($form, $request));
+            $flashMessage = $this->translator->trans('change_password.flash.success', [], 'KRGUserBundle');
             $this->addFlash('notice', $flashMessage);
 
             return $this->redirectToRoute('krg_user_show');
         }
 
-        return $this->render('KRGUserBundle:User:changePassword.html.twig', [
+        return $this->render('@KRGUser/security/changePassword.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
         ]);
@@ -116,21 +125,10 @@ class UserController extends AbstractController
         /* @var $user UserInterface */
         $user = $this->getUser();
 
-
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($user);
         $entityManager->flush();
 
         return $this->redirectToRoute('krg_user_login');
-    }
-
-    public static function getSubscribedServices()
-    {
-        return array_merge(
-            parent::getSubscribedServices(), [
-            '?'.UserManagerInterface::class,
-            '?'.EventDispatcherInterface::class,
-            '?'.TranslatorInterface::class
-        ]);
     }
 }

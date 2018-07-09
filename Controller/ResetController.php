@@ -23,14 +23,34 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class ResetController extends AbstractController
 {
+    /** @var LoginManagerInterface */
+    protected $loginManager;
+
+    /** @var UserManagerInterface */
+    protected $userManager;
+
+    /** @var EventDispatcherInterface */
+    protected $eventDispatcher;
+
+    /** @var TranslatorInterface */
+    protected $translator;
+
+    public function __construct(LoginManagerInterface $loginManager, UserManagerInterface $userManager, EventDispatcherInterface $eventDispatcher, TranslatorInterface $translator)
+    {
+        $this->loginManager = $loginManager;
+        $this->userManager = $userManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->translator = $translator;
+    }
+
     /**
      * @Route("", name="krg_user_reset_request")
      */
     public function requestAction(Request $request)
     {
-        $this->container->get(LoginManagerInterface::class)->disconnectIfLogged();
+        $this->loginManager->disconnectIfLogged();
 
-        return $this->render('KRGUserBundle:Reset:request.html.twig');
+        return $this->render('@KRGUser/reset/request.html.twig');
     }
 
     /**
@@ -38,27 +58,23 @@ class ResetController extends AbstractController
      */
     public function sendEmailAction(Request $request)
     {
-        $this->container->get(LoginManagerInterface::class)->disconnectIfLogged();
+        $this->loginManager->disconnectIfLogged();
 
-        /* @var $userManager UserManagerInterface */
-        $userManager = $this->container->get(UserManagerInterface::class);
         $username = $request->request->get('username');
-        $user = $userManager->findUserByEmail($username);
+        $user = $this->userManager->findUserByEmail($username);
         if ($user) {
             /** @var $dispatcher EventDispatcherInterface */
-            $dispatcher = $this->container->get(EventDispatcherInterface::class);
-
-            $userManager->createConfirmationToken($user);
-            $userManager->updateUser($user, true);
-            $dispatcher->dispatch(MessageEvents::SEND, new ResetPasswordMessage($user));
+            $this->userManager->createConfirmationToken($user);
+            $this->userManager->updateUser($user, true);
+            $this->eventDispatcher->dispatch(MessageEvents::SEND, new ResetPasswordMessage($user));
 
             $event = new GetResponseUserEvent($user, $request);
-            $dispatcher->dispatch(KRGUserEvents::RESETTING_RESET_REQUEST, $event);
+            $this->eventDispatcher->dispatch(KRGUserEvents::RESETTING_RESET_REQUEST, $event);
 
             return $this->redirectToRoute('krg_user_reset_request_send');
         }
 
-        return $this->render('KRGUserBundle:Reset:sendEmail.html.twig');
+        return $this->render('@KRGUser/reset/sendEmail.html.twig');
     }
 
     /**
@@ -66,12 +82,9 @@ class ResetController extends AbstractController
      */
     public function resetAction(Request $request, $token)
     {
-        $this->container->get(LoginManagerInterface::class)->disconnectIfLogged();
+        $this->loginManager->disconnectIfLogged();
 
-        /* @var $userManager UserManagerInterface */
-        $userManager = $this->container->get(UserManagerInterface::class);
-
-        $user = $userManager->findUserByConfirmationToken($token);
+        $user = $this->userManager->findUserByConfirmationToken($token);
         if (null === $user) {
             throw new NotFoundHttpException(sprintf('The user with "confirmation token" does not exist for value "%s"', $token));
         }
@@ -83,33 +96,21 @@ class ResetController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
-            $userManager->processConfirmation($user);
-            $userManager->updateUser($user, true);
+            $this->userManager->processConfirmation($user);
+            $this->userManager->updateUser($user, true);
 
             /** @var $dispatcher EventDispatcherInterface */
-            $dispatcher = $this->container->get(EventDispatcherInterface::class);
             $event = new FormEvent($form, $request);
-            $dispatcher->dispatch(KRGUserEvents::RESETTING_RESET_COMPLETED, $event);
+            $this->eventDispatcher->dispatch(KRGUserEvents::RESETTING_RESET_COMPLETED, $event);
 
-            $flashMessage = $this->container->get(TranslatorInterface::class)->trans('change_password.flash.success', [], 'KRGUserBundle');
+            $flashMessage = $this->translator->trans('change_password.flash.success', [], 'KRGUserBundle');
             $this->addFlash('notice', $flashMessage);
 
             return $this->redirectToRoute('krg_user_login');
         }
 
-        return $this->render('KRGUserBundle:Reset:reset.html.twig', [
+        return $this->render('@KRGUser/reset/reset.html.twig', [
             'form' => $form->createView(),
-        ]);
-    }
-
-    public static function getSubscribedServices()
-    {
-        return array_merge(
-            parent::getSubscribedServices(), [
-            '?'.UserManagerInterface::class,
-            '?'.LoginManagerInterface::class,
-            '?'.EventDispatcherInterface::class,
-            '?'.TranslatorInterface::class
         ]);
     }
 }
