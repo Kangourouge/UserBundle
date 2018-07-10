@@ -10,7 +10,8 @@ krg_user:
     registration:
         confirmed_target_route: homepage 
     login:
-        admin_redirect_route: easyadmin
+        admin_target_route: easyadmin
+        user_target_route: homepage
 
 doctrine:
     dbal:
