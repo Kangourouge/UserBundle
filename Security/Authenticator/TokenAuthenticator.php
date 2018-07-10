@@ -2,33 +2,24 @@
 
 namespace KRG\UserBundle\Security\Authenticator;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    /** @var RouterInterface */
+    protected $router;
 
-    /**
-     * @var AuthenticationSuccessHandlerInterface
-     */
-    private $authenticationSuccessHandler;
+    /** @var AuthenticationSuccessHandlerInterface */
+    protected $authenticationSuccessHandler;
 
-    /**
-     * TokenAuthenticator constructor.
-     * @param RouterInterface $router
-     * @param AuthenticationSuccessHandlerInterface $authenticationSuccessHandler
-     */
     public function __construct(RouterInterface $router, AuthenticationSuccessHandlerInterface $authenticationSuccessHandler)
     {
         $this->router = $router;
@@ -38,8 +29,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     /**
      * Called on every request. Return whatever credentials you want,
      * or null to stop authentication.
-     * @param Request $request
-     * @return array|null
      */
     public function getCredentials(Request $request)
     {
@@ -56,7 +45,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         $token = $credentials['token'];
 
         if (null === $token) {
-            return;
+            return null;
         }
 
         return $userProvider->loadUserByUsername($token);

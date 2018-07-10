@@ -10,7 +10,10 @@ use KRG\UserBundle\Util\TokenGenerator;
 
 class UserManager implements UserManagerInterface
 {
+    /** @var PasswordUpdaterInterface */
     private $passwordUpdater;
+
+    /** @var EntityManagerInterface */
     private $entityManager;
 
     public function __construct(PasswordUpdaterInterface $passwordUpdater, EntityManagerInterface $entityManager)

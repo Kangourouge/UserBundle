@@ -2,26 +2,12 @@
 
 namespace KRG\UserBundle\Message;
 
-use KRG\MessageBundle\Event\AbstractMessage;
 use KRG\UserBundle\Entity\UserInterface;
-use Symfony\Component\Templating\EngineInterface;
+use KRG\MessageBundle\Event\AbstractMailMessage;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class InvitationMessage extends AbstractMessage
+class InvitationMessage extends AbstractMailMessage
 {
-    /**
-     * @var UserInterface
-     */
-    private $user;
-
-    /**
-     * InvitationMessage constructor.
-     * @param UserInterface $user
-     */
-    public function __construct(UserInterface $user)
-    {
-        $this->user = $user;
-    }
-
     public function getTo()
     {
         return $this->user->getEmail();
@@ -29,13 +15,14 @@ class InvitationMessage extends AbstractMessage
 
     public function getSubject()
     {
-        return 'Invitation';
+        return $this->translator->trans('mail.subject.invitation', ['user' => $this->user], 'mails');
     }
 
-    public function getBody(EngineInterface $templating)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return $templating->render('KRGUserBundle:Message:invitation.html.twig', [
-            'user' => $this->user
-        ]);
+        parent::configureOptions($resolver);
+
+        $resolver->setRequired(['user']);
+        $resolver->setAllowedTypes('user', UserInterface::class);
     }
 }

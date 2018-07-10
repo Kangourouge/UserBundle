@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\UserBundle\Event\Listener;
+namespace KRG\UserBundle\Annotation\Listener;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -11,22 +11,19 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class PrivateDataListener
 {
-    /**
-     * @var AnnotationReader
-     */
+    /** @var AnnotationReader */
     private $annotationReader;
 
-    /**
-     * @var PropertyAccessorInterface
-     */
+    /** @var PropertyAccessorInterface */
     private $propertyAccessor;
 
-    /**
-     * PrivateDataListener constructor.
-     */
     public function __construct()
     {
-        $this->annotationReader = new AnnotationReader();
+        try {
+            $this->annotationReader = new AnnotationReader();
+        } catch (\Exception $exception) {
+        }
+
         $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()->getPropertyAccessor();
     }
 
@@ -34,16 +31,20 @@ class PrivateDataListener
     {
         $object = $args->getObject();
         $entityManager = $args->getEntityManager();
-        $metadata = $entityManager->getMetadataFactory()->getMetadataFor(get_class($object));
-        foreach ($metadata->getReflectionClass()->getProperties() as $property) {
-            foreach ($this->annotationReader->getPropertyAnnotations($property) as $annotation) {
-                if ($annotation instanceof PrivateData) {
-                    $this->propertyAccessor->setValue($object, $property->getName(), $this->getValue($property, $annotation));
+
+        try {
+            $metadata = $entityManager->getMetadataFactory()->getMetadataFor(get_class($object));
+            foreach ($metadata->getReflectionClass()->getProperties() as $property) {
+                foreach ($this->annotationReader->getPropertyAnnotations($property) as $annotation) {
+                    if ($annotation instanceof PrivateData) {
+                        $this->propertyAccessor->setValue($object, $property->getName(), $this->getValue($property, $annotation));
+                    }
                 }
             }
-        }
 
-        $entityManager->getUnitOfWork()->computeChangeSet($metadata, $object);
+            $entityManager->getUnitOfWork()->computeChangeSet($metadata, $object);
+        } catch (\Exception $exception) {
+        }
     }
 
     protected function getValue(\ReflectionProperty $property, $annotation)

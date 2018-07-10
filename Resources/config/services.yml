@@ -6,10 +6,6 @@ services:
         bind:
             $firewallName: 'main'
 
-    KRG\UserBundle\:
-        resource: '../../*'
-        exclude: '../../{Command,DependencyInjection,Doctrine,Entity,Event,Message,Repository,Resources}'
-
     KRG\UserBundle\Controller\:
         resource: '../../Controller'
         public: true
@@ -20,23 +16,36 @@ services:
         public: true
         tags: ['form.type']
 
-    krg_user.form.registration:
-        alias: KRG\UserBundle\Form\Type\RegistrationType
+    KRG\UserBundle\EventSubscriber\:
+        resource: '../../EventSubscriber'
+        tags: ['kernel.event_subscriber']
 
-    KRG\UserBundle\Event\Subscriber\:
-        resource: '../../Event/Subscriber'
-        tags: [kernel.event_subscriber]
-
-    KRG\UserBundle\Event\Subscriber\UserListener:
+    KRG\UserBundle\Entity\Listener\UserListener:
         tags: ['doctrine.event_subscriber']
 
-    KRG\UserBundle\Event\Listener\PrivateDataListener:
-        tags:
-            - { name: doctrine.event_listener, event: preSoftDelete }
+    KRG\UserBundle\Annotation\Listener\PrivateDataListener:
+        tags: [{ name: 'doctrine.event_listener', event: 'preSoftDelete' }]
 
     KRG\UserBundle\Util\:
         resource: '../../Util'
         public: true
+
+    KRG\UserBundle\Manager\:
+        resource: '../../Manager'
+        public: true
+
+    KRG\UserBundle\Security\:
+        resource: '../../Security'
+        public: true
+
+    KRG\UserBundle\OAuth\:
+        resource: '../../OAuth'
+        public: true
+
+    KRG\UserBundle\Message\:
+        resource: '../../Message'
+        lazy: true
+        tags: ['message.type']
 
     # Alias https://symfony.com/doc/current/service_container/alias_private.html
     security.authentication.success_handler.main.form_login:
@@ -54,7 +63,8 @@ services:
     Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface:
         alias: security.authentication.session_strategy
 
-    KRG\UserBundle\Toolbar\:
-        resource: '../../Toolbar'
-        tags: ['krg.easyadmin.toolbar']
-        public: true
+    fos_user.user_manager:
+        alias: '@KRG\UserBundle\Manager\UserManager'
+
+    fos_user.util.token_generator:
+        alias: '@KRG\UserBundle\Util\TokenGenerator'

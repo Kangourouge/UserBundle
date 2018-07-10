@@ -14,52 +14,34 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterfa
 
 class LoginManager implements LoginManagerInterface
 {
-    /**
-     * @var TokenStorageInterface
-     */
+    /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * @var UserCheckerInterface
-     */
+    /** @var UserCheckerInterface */
     private $userChecker;
 
-    /**
-     * @var SessionAuthenticationStrategyInterface
-     */
+    /** @var SessionAuthenticationStrategyInterface */
     private $sessionStrategy;
 
-    /**
-     * @var RequestStack
-     */
+    /** @var RequestStack */
     private $requestStack;
 
-    /**
-     * @var AuthorizationCheckerInterface
-     */
+    /** @var AuthorizationCheckerInterface */
     private $authorizationChecker;
 
-    /**
-     * @var RememberMeServicesInterface
-     */
+    /** @var RememberMeServicesInterface */
     private $rememberMeService;
 
-    /**
-     * LoginManager constructor.
-     *
-     * @param TokenStorageInterface                  $tokenStorage
-     * @param UserCheckerInterface                   $userChecker
-     * @param SessionAuthenticationStrategyInterface $sessionStrategy
-     * @param RequestStack                           $requestStack
-     * @param AuthorizationCheckerInterface          $authorizationChecker
-     * @param RememberMeServicesInterface|null       $rememberMeService
-     */
+    /** @var string */
+    private $firewallName;
+
     public function __construct(TokenStorageInterface $tokenStorage,
                                 UserCheckerInterface $userChecker,
                                 SessionAuthenticationStrategyInterface $sessionStrategy,
                                 RequestStack $requestStack,
                                 AuthorizationCheckerInterface $authorizationChecker,
-                                RememberMeServicesInterface $rememberMeService = null
+                                RememberMeServicesInterface $rememberMeService = null,
+                                string $firewallName
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->userChecker = $userChecker;
@@ -67,16 +49,14 @@ class LoginManager implements LoginManagerInterface
         $this->requestStack = $requestStack;
         $this->authorizationChecker = $authorizationChecker;
         $this->rememberMeService = $rememberMeService;
+        $this->firewallName = $firewallName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    final public function logInUser($firewallName, UserInterface $user, Response $response = null)
+    final public function logInUser(UserInterface $user, Response $response = null)
     {
         $this->userChecker->checkPreAuth($user);
 
-        $token = $this->createToken($firewallName, $user);
+        $token = $this->createToken($this->firewallName, $user);
         $request = $this->requestStack->getCurrentRequest();
 
         if (null !== $request) {
@@ -103,12 +83,6 @@ class LoginManager implements LoginManagerInterface
         }
     }
 
-    /**
-     * @param string        $firewall
-     * @param UserInterface $user
-     *
-     * @return UsernamePasswordToken
-     */
     protected function createToken($firewall, UserInterface $user)
     {
         return new UsernamePasswordToken($user, null, $firewall, $user->getRoles());

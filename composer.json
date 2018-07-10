@@ -1,23 +1,30 @@
 {
-  "name"       : "kangourouge/user-bundle",
-  "description": "Kangourouge User Bundle",
-  "type"       : "symfony-bundle",
-  "license"    : "MIT",
-  "authors"    : [
+  "name"        : "kangourouge/user-bundle",
+  "description" : "Kangourouge User Bundle",
+  "type"        : "symfony-bundle",
+  "license"     : "MIT",
+  "authors"     : [
     {
       "name" : "Arthur Miniconi",
       "email": "arthur.miniconi@gmail.com"
     }
   ],
-  "require"    : {
+  "require"     : {
     "php"                            : ">=7",
     "symfony/framework-bundle"       : "~3.0",
-    "stof/doctrine-extensions-bundle": "^1.2"
+    "stof/doctrine-extensions-bundle": "^1.2",
+    "kangourouge/message-bundle"     : "3.*"
   },
-  "autoload"   : {
+  "autoload"    : {
     "psr-0": {
       "KRG\\UserBundle": ""
     }
   },
-  "target-dir" : "KRG/UserBundle"
+  "target-dir"  : "KRG/UserBundle",
+  "repositories": [
+    {
+      "type": "vcs",
+      "url" : "https://github.com/Kangourouge/MessageBundle.git"
+    }
+  ]
 }

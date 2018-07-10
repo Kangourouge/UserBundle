@@ -2,14 +2,9 @@
 
 namespace KRG\UserBundle\Controller;
 
-use KRG\MessageBundle\Event\MessageEvents;
 use KRG\UserBundle\Manager\LoginManagerInterface;
 use KRG\UserBundle\Manager\UserManagerInterface;
-use KRG\UserBundle\Event\FormEvent;
-use KRG\UserBundle\Event\GetResponseUserEvent;
 use KRG\UserBundle\Form\Type\ResetType;
-use KRG\UserBundle\KRGUserEvents;
-use KRG\UserBundle\Message\ResetPasswordMessage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -30,7 +25,7 @@ class ResetController extends AbstractController
     protected $userManager;
 
     /** @var EventDispatcherInterface */
-    protected $eventDispatcher;
+    protected $dispatcher;
 
     /** @var TranslatorInterface */
     protected $translator;
@@ -39,7 +34,7 @@ class ResetController extends AbstractController
     {
         $this->loginManager = $loginManager;
         $this->userManager = $userManager;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->dispatcher = $eventDispatcher;
         $this->translator = $translator;
     }
 
@@ -63,13 +58,11 @@ class ResetController extends AbstractController
         $username = $request->request->get('username');
         $user = $this->userManager->findUserByEmail($username);
         if ($user) {
-            /** @var $dispatcher EventDispatcherInterface */
             $this->userManager->createConfirmationToken($user);
             $this->userManager->updateUser($user, true);
-            $this->eventDispatcher->dispatch(MessageEvents::SEND, new ResetPasswordMessage($user));
 
-            $event = new GetResponseUserEvent($user, $request);
-            $this->eventDispatcher->dispatch(KRGUserEvents::RESETTING_RESET_REQUEST, $event);
+//            $this->messageFactory->create(ResetPasswordMessage::class, ['user' => $user]);
+//            $this->dispatcher->dispatch(MessageEvents::SEND);
 
             return $this->redirectToRoute('krg_user_reset_request_send');
         }
@@ -89,22 +82,19 @@ class ResetController extends AbstractController
             throw new NotFoundHttpException(sprintf('The user with "confirmation token" does not exist for value "%s"', $token));
         }
 
-        $form = $this->createForm(ResetType::class)
+        $form = $this
+            ->createForm(ResetType::class)
             ->setData($user)
             ->add('submit', SubmitType::class, ['label' => 'form.submit_reset_password']);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user = $form->getData();
+
             $this->userManager->processConfirmation($user);
             $this->userManager->updateUser($user, true);
 
-            /** @var $dispatcher EventDispatcherInterface */
-            $event = new FormEvent($form, $request);
-            $this->eventDispatcher->dispatch(KRGUserEvents::RESETTING_RESET_COMPLETED, $event);
-
-            $flashMessage = $this->translator->trans('change_password.flash.success', [], 'KRGUserBundle');
-            $this->addFlash('notice', $flashMessage);
+            $this->addFlash('notice', $this->translator->trans('change_password.flash.success', [], 'KRGUserBundle'));
 
             return $this->redirectToRoute('krg_user_login');
         }

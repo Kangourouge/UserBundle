@@ -3,7 +3,6 @@
 namespace KRG\UserBundle\Controller;
 
 use KRG\UserBundle\Manager\LoginManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;

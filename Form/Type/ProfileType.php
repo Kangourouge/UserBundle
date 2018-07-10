@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UserType extends AbstractType
+class ProfileType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -43,7 +43,7 @@ class UserType extends AbstractType
                 'type'            => PasswordType::class,
                 'first_options'   => ['label' => 'form.password'],
                 'second_options'  => ['label' => 'form.password_confirmation'],
-                'invalid_message' => 'Mismatch', // TODO: translate
+                'invalid_message' => 'form.password.mismatch',
                 'required'        => true
             ]);
         }

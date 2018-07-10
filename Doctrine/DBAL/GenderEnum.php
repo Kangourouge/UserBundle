@@ -5,7 +5,7 @@ namespace KRG\UserBundle\Doctrine\DBAL;
 class GenderEnum extends Enum
 {
     const
-        MALE = 'male',
+        MALE   = 'male',
         FEMALE = 'female';
 
     public static $values = [

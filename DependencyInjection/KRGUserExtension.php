@@ -6,25 +6,14 @@ use KRG\UserBundle\Controller\RegistrationController;
 use KRG\UserBundle\Security\Firewall\AuthenticationSuccessHandler;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
-/**
- * This is the class that loads and manages your bundle configuration.
- *
- * @link http://symfony.com/doc/current/cookbook/bundles/extension.html
- */
 class KRGUserExtension extends Extension
 {
-    /**
-     * @var ContainerBuilder
-     */
+    /** @var ContainerBuilder */
     private $container;
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $this->container = $container;
@@ -40,20 +29,21 @@ class KRGUserExtension extends Extension
             ]);
         }
 
-        if (isset($config['login']['admin_redirect_route'])) {
-            $this->callServiceSetter(AuthenticationSuccessHandler::class, 'setAdminRedirectRoute', [
-                $config['login']['admin_redirect_route']
+        if (isset($config['login']['admin_target_route'])) {
+            $this->callServiceSetter(AuthenticationSuccessHandler::class, 'setAdminTargetRoute', [
+                $config['login']['admin_target_route']
+            ]);
+        }
+
+        if (isset($config['login']['user_target_route'])) {
+            $this->callServiceSetter(AuthenticationSuccessHandler::class, 'setUserTargetRoute', [
+                $config['login']['user_target_route']
             ]);
         }
     }
 
     /**
      * Call a service setter for setting up value
-     *
-     * @param string $serviceName
-     * @param string $setter
-     * @param array $values
-     * @return Definition|bool
      */
     public function callServiceSetter($serviceName, $setter, array $values)
     {

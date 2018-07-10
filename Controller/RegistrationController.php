@@ -3,14 +3,11 @@
 namespace KRG\UserBundle\Controller;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use KRG\MessageBundle\Service\Factory\MessageFactory;
 use KRG\UserBundle\Entity\UserInterface;
 use KRG\UserBundle\Form\Type\RegistrationType;
 use KRG\UserBundle\Manager\LoginManagerInterface;
 use KRG\UserBundle\Manager\UserManagerInterface;
-use KRG\UserBundle\Event\FilterUserResponseEvent;
-use KRG\UserBundle\Event\FormEvent;
-use KRG\UserBundle\Event\GetResponseUserEvent;
-use KRG\UserBundle\KRGUserEvents;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -19,10 +16,11 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AccountStatusException;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @Route("/register")
@@ -38,6 +36,12 @@ class RegistrationController extends AbstractController
     /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
+    /** @var MessageFactory */
+    protected $messageFactory;
+
+    /** @var TranslatorInterface */
+    protected $translator;
+
     /** @var TokenStorageInterface */
     protected $tokenStorage;
 
@@ -47,13 +51,21 @@ class RegistrationController extends AbstractController
     /** @var string */
     protected $confirmedTargetRoute;
 
-    public function __construct(LoginManagerInterface $loginManager, UserManagerInterface $userManager, EventDispatcherInterface $eventDispatcher, TokenStorageInterface $tokenStorage, SessionInterface $session)
+    public function __construct(LoginManagerInterface $loginManager,
+                                UserManagerInterface $userManager,
+                                EventDispatcherInterface $eventDispatcher,
+                                TokenStorageInterface $tokenStorage,
+                                SessionInterface $session,
+                                MessageFactory $messageFactory,
+                                TranslatorInterface $translator)
     {
         $this->loginManager = $loginManager;
         $this->userManager = $userManager;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->messageFactory = $messageFactory;
         $this->tokenStorage = $tokenStorage;
+        $this->dispatcher = $eventDispatcher;
         $this->session = $session;
+        $this->translator = $translator;
     }
 
     /**
@@ -65,22 +77,29 @@ class RegistrationController extends AbstractController
         $user = $this->userManager->createUser();
         $user->setEnabled(true);
 
-        $form = $this->createForm(RegistrationType::class, null, [
-            'action' => $this->generateUrl('krg_user_registration_register')
-        ])
+        $form = $this
+            ->createForm(RegistrationType::class, null, [
+                'action' => $this->generateUrl('krg_user_registration_register')
+            ])
             ->setData($user)
             ->add('submit', SubmitType::class, ['label' => 'form.submit_registration']);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $event = new FormEvent($form, $request);
-                $this->eventDispatcher->dispatch(KRGUserEvents::REGISTRATION_SUCCESS, $event);
+                $user = $form->getData();
+
+                $this->userManager->createConfirmationToken($user);
                 $this->userManager->updateUser($user, true);
 
-                return $event->getResponse();
+//                $this->messageFactory->create(RegistrationCheckEmailMessage::class, ['user' => $user]);
+//                $this->dispatcher->dispatch(MessageEvents::SEND);
+
+                $this->session->set('krg_user_send_confirmation_email/email', $user->getEmail());
+
+                return new RedirectResponse($this->generateUrl('krg_user_registration_check_email'));
             } catch (UniqueConstraintViolationException $exception) {
-                $form->addError(new FormError('Votre adresse mail est déjà utilisée'));
+                $form->addError(new FormError($this->translator->trans('user.email.exists', [], 'validators')));
             } catch (\Exception $exception) {
                 $form->addError(new FormError('Error'));
             }
@@ -99,7 +118,6 @@ class RegistrationController extends AbstractController
     public function checkEmailAction(Request $request)
     {
         $email = $this->session->get('krg_user_send_confirmation_email/email');
-
         if (empty($email)) {
             return new RedirectResponse($this->generateUrl('krg_user_registration_register'));
         }
@@ -117,8 +135,9 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/confirm/{token}", name="krg_user_registration_confirm")
      * Receive the confirmation token from user email provider, login the user.
+     *
+     * @Route("/confirm/{token}", name="krg_user_registration_confirm")
      */
     public function confirmAction(Request $request, $token)
     {
@@ -129,16 +148,16 @@ class RegistrationController extends AbstractController
 
         $user->setConfirmationToken(null);
         $user->setEnabled(true);
-
-        $event = new GetResponseUserEvent($user, $request);
-        $this->eventDispatcher->dispatch(KRGUserEvents::REGISTRATION_CONFIRM, $event);
-
         $this->userManager->updateUser($user, true);
 
-        $url = $this->generateUrl('krg_user_registration_confirmed');
-        $response = new RedirectResponse($url);
-
-        $this->eventDispatcher->dispatch(KRGUserEvents::REGISTRATION_CONFIRMED, new FilterUserResponseEvent($user, $request, $response));
+        $response = null;
+        try {
+            $response = new RedirectResponse($this->generateUrl('krg_user_registration_confirmed'));
+            $this->loginManager->logInUser($user, $response);
+        } catch (AccountStatusException $ex) {
+            // We simply do not authenticate users which do not pass the user
+            // checker (not enabled, expired, etc.).
+        }
 
         return $response;
     }
@@ -161,9 +180,6 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    /**
-     * @return string|null
-     */
     protected function getTargetUrlFromSession(SessionInterface $session)
     {
         $key = sprintf('_security.%s.target_path', $this->tokenStorage->getToken()->getProviderKey());

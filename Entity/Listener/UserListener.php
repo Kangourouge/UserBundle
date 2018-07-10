@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\UserBundle\Event\Subscriber;
+namespace KRG\UserBundle\Entity\Listener;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
@@ -9,16 +9,9 @@ use KRG\UserBundle\Manager\UserManagerInterface;
 
 class UserListener implements EventSubscriber
 {
-    /**
-     * @var UserManagerInterface
-     */
+    /** @var UserManagerInterface */
     private $userManager;
 
-    /**
-     * UserListener constructor.
-     *
-     * @param UserManagerInterface $userManager
-     */
     public function __construct(UserManagerInterface $userManager)
     {
         $this->userManager = $userManager;
@@ -26,10 +19,10 @@ class UserListener implements EventSubscriber
 
     public function getSubscribedEvents()
     {
-        return array(
+        return [
             'prePersist',
             'preUpdate',
-        );
+        ];
     }
 
     public function prePersist(LifecycleEventArgs $event)

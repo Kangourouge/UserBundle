@@ -9,7 +9,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
 use Symfony\Component\Security\Http\HttpUtils;
-use Symfony\Component\Security\Http\ParameterBagUtils;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -17,20 +16,14 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 {
     use TargetPathTrait;
 
-    /**
-     * @var RouterInterface
-     */
+    /** @var RouterInterface */
     protected $router;
 
-    /**
-     * @var ValidatorInterface
-     */
+    /** @var ValidatorInterface */
     protected $validator;
 
-    /**
-     * @var string
-     */
-    protected $adminRedirectRoute;
+    /** @var string */
+    protected $adminTargetRoute;
 
     public function __construct(HttpUtils $httpUtils, array $options = array(), RouterInterface $router, ValidatorInterface $validator)
     {
@@ -42,45 +35,30 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 
     /**
      * Firewalls: guess and secured_area pass here
-     *
-     * @param Request $request
-     * @param TokenInterface $token
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
-        $path = $this->determineTargetUrl($request);
-
-        if (self::hasAdminRole($token->getRoles()) && $this->adminRedirectRoute) {
-            $path = $this->router->generate($this->adminRedirectRoute);
+        if (self::hasAdminRole($token->getRoles()) && $this->adminTargetRoute) {
+            $path = $this->adminTargetRoute;
+        } else {
+            $path = $this->determineTargetUrl($request, $token);
         }
-
-        // TODO: ici pour peut tester si le Profil est complet et rediriger vers l'edition de profil
 
         return $this->httpUtils->createRedirectResponse($request, $path);
     }
 
     /**
      * Builds the target URL according to the defined options.
-     *
-     * @return string
      */
     protected function determineTargetUrl(Request $request)
     {
-        $session = $request->getSession();
-        $key = sprintf('_security.%s.target_path', $this->providerKey);
-        if ($session->has($key)) {
-            return $session->get($key);
+        if ($targetRoute = $this->getTargetPath($request->getSession(), $this->providerKey)) {
+            return $targetRoute;
         }
 
         return parent::determineTargetUrl($request);
     }
 
-    /**
-     * @param array $roles
-     *
-     * @return bool
-     */
     protected static function hasAdminRole(array $roles)
     {
         /* @var $role Role */
@@ -93,8 +71,16 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         return false;
     }
 
-    public function setAdminRedirectRoute($adminRedirectRoute)
+    public function setAdminTargetRoute(string $adminTargetRoute)
     {
-        $this->adminRedirectRoute = $adminRedirectRoute;
+        $this->adminTargetRoute = $adminTargetRoute;
+    }
+
+    public function setUserTargetRoute(string $userTargetRoute)
+    {
+        $this->setOptions(array_merge($this->getOptions(), [
+            'default_target_path'            => $userTargetRoute,
+            'always_use_default_target_path' => true,
+        ]));
     }
 }

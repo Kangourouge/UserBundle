@@ -1,36 +1,52 @@
-form.email: 'Adresse email'
-form.firstname: Prénom
-form.lastname: Nom
-form.password: 'Mot de passe'
-form.new_password: 'Nouveau mot de passe'
-form.new_password_confirmation: 'Confirmer le nouveau mot de passe'
-form.password_confirmation: 'Confirmation mot de passe'
-form.current_password: 'Mot de passe actuel'
-form.terms: 'J''accepte les conditions générales d''utilisation'
-form.submit: Envoyer
-form.submit_registration: Inscription
-form.submit_profile: 'Mettre à jour mon profil'
-form.submit_change_password: 'Mettre à jour mon mot de passe'
-form.submit_reset_password: 'Réinitialiser mon mot de passe'
-form.error.password: 'Les deux mots de passe ne sont pas identiques.'
-security.login.username: 'Adresse email'
-security.login.password: 'Mot de passe'
-security.login.remember_me: 'Se souvenir de moi'
-security.login.submit: Connexion
-security.login.forgot_password: 'Mot de passe oublié ?'
-security.login.error: 'Votre adresse mail ou votre mot de passe sont incorrects.'
-security.restricted.message: 'Vous n''avez pas les autorisations nécessaires pour accéder à cette page.'
-layout.logout: Déconnexion
-layout.login: Connexion
-layout.register: Inscription
-layout.logged_in_as: 'Connecté en tant que %username%'
-resetting.request.check_email: "Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour réinitialiser votre mot de passe.\n\nSi vous ne recevez pas un email, vérifiez votre dossier spam ou essayez à nouveau.\n"
-resetting.request.username: 'Adresse email'
-resetting.request.submit: 'Réinitialiser le mot de passe'
-change_password.submit: 'Modifier le mot de passe'
-change_password.flash.success: 'Le mot de passe a été modifié.'
-registration.check_email: 'Un e-mail a été envoyé à l''adresse %email%. Il contient un lien d''activation sur lequel il vous faudra cliquer afin d''activer votre compte.'
-registration.confirmed: 'Félicitations %username%, votre compte est maintenant activé.'
-registration.back: 'Retour à la page d''origine.'
-registration.error: 'Votre adresse mail est déjà utilisée'
-profile.flash.success: 'Votre profil à été mis à jour.'
+form:
+  email: 'Adresse email'
+  firstname: Prénom
+  lastname: Nom
+  password: 'Mot de passe'
+  new_password: 'Nouveau mot de passe'
+  new_password_confirmation: 'Confirmer le nouveau mot de passe'
+  password_confirmation: 'Confirmation mot de passe'
+  current_password: 'Mot de passe actuel'
+  terms: 'J''accepte les conditions générales d''utilisation'
+  submit: Envoyer
+  submit_registration: Inscription
+  submit_profile: 'Mettre à jour mon profil'
+  submit_change_password: 'Mettre à jour mon mot de passe'
+  submit_reset_password: 'Réinitialiser mon mot de passe'
+
+security:
+  login:
+    username: 'Adresse email'
+    password: 'Mot de passe'
+    remember_me: 'Se souvenir de moi'
+    submit: Connexion
+    forgot_password: 'Mot de passe oublié ?'
+    error: 'Votre adresse mail ou votre mot de passe sont incorrects.'
+  restricted:
+    message: 'Vous n''avez pas les autorisations nécessaires pour accéder à cette page.'
+
+layout:
+  logout: Déconnexion
+  login: Connexion
+  register: Inscription
+  logged_in_as: 'Connecté en tant que %username%'
+
+resetting:
+  request:
+    check_email: "Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour réinitialiser votre mot de passe.\n\nSi vous ne recevez pas un email, vérifiez votre dossier spam ou essayez à nouveau.\n"
+    username: 'Adresse email'
+    submit: 'Réinitialiser le mot de passe'
+
+change_password:
+  submit: 'Modifier le mot de passe'
+  flash.success: 'Le mot de passe a été modifié.'
+
+registration:
+  check_email: 'Un e-mail a été envoyé à l''adresse %email%. Il contient un lien d''activation sur lequel il vous faudra cliquer afin d''activer votre compte.'
+  confirmed: 'Félicitations %username%, votre compte est maintenant activé.'
+  back: 'Retour à la page d''origine.'
+  error: 'Votre adresse mail est déjà utilisée'
+
+profile:
+  flash:
+    success: 'Votre profil à été mis à jour.'

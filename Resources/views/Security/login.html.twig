@@ -8,7 +8,7 @@
 
     <form action="{{ path('krg_user_login_check') }}" method="post">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
-        <input type="hidden" name="_target_path" value="{{ path('homepage') }}" />
+        <input type="hidden" name="_target_path" value="{{ path('homepage') }}"/>
 
         <label for="username">{{ 'security.login.username'|trans }}</label>
         <input type="text" id="username" name="_username" value="{{ last_username }}" required="required"/>
