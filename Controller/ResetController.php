@@ -2,6 +2,7 @@
 
 namespace KRG\UserBundle\Controller;
 
+use KRG\UserBundle\Form\Type\ResetRequestType;
 use KRG\UserBundle\Manager\LoginManagerInterface;
 use KRG\UserBundle\Manager\UserManagerInterface;
 use KRG\UserBundle\Form\Type\ResetType;
@@ -9,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -30,12 +32,16 @@ class ResetController extends AbstractController
     /** @var TranslatorInterface */
     protected $translator;
 
-    public function __construct(LoginManagerInterface $loginManager, UserManagerInterface $userManager, EventDispatcherInterface $eventDispatcher, TranslatorInterface $translator)
+    /** @var FormFactoryInterface */
+    protected $formFactory;
+
+    public function __construct(LoginManagerInterface $loginManager, UserManagerInterface $userManager, EventDispatcherInterface $eventDispatcher, TranslatorInterface $translator, FormFactoryInterface $formFactory)
     {
         $this->loginManager = $loginManager;
         $this->userManager = $userManager;
         $this->dispatcher = $eventDispatcher;
         $this->translator = $translator;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -45,7 +51,15 @@ class ResetController extends AbstractController
     {
         $this->loginManager->disconnectIfLogged();
 
-        return $this->render('@KRGUser/reset/request.html.twig');
+        $form = $this->formFactory
+            ->createNamed(null, ResetRequestType::class, null, [
+                'action' => $this->generateUrl('krg_user_reset_request_send')
+            ])
+            ->add('submit', SubmitType::class, ['label' => 'resetting.request.submit']);
+
+        return $this->render('@KRGUser/Reset/request.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -67,7 +81,7 @@ class ResetController extends AbstractController
             return $this->redirectToRoute('krg_user_reset_request_send');
         }
 
-        return $this->render('@KRGUser/reset/sendEmail.html.twig');
+        return $this->render('@KRGUser/Reset/sendEmail.html.twig');
     }
 
     /**
@@ -99,7 +113,7 @@ class ResetController extends AbstractController
             return $this->redirectToRoute('krg_user_login');
         }
 
-        return $this->render('@KRGUser/reset/reset.html.twig', [
+        return $this->render('@KRGUser/Reset/reset.html.twig', [
             'form' => $form->createView(),
         ]);
     }
