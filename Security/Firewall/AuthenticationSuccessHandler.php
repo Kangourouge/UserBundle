@@ -2,11 +2,9 @@
 
 namespace KRG\UserBundle\Security\Firewall;
 
-use KRG\UserBundle\Entity\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
