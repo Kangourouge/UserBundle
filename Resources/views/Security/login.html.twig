@@ -7,4 +7,6 @@
     {% endif %}
 
     {{ form(form) }}
+
+    <a href="{{ path('krg_user_reset_request') }}">{{ 'security.login.forgot_password'|trans }}</a>
 {% endblock %}
