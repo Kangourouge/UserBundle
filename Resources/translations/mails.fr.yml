@@ -1,18 +1,24 @@
-registration_check_email: |
-    Bonjour %name%,
-    Pour valider votre compte utilisateur, merci de vous rendre sur <a href="%url%">%url%</a>
-    Ce lien ne peut être utilisé qu'une seule fois pour valider votre compte.
-    Cordialement,
-    L'équipe
+registration:
+    subject: Inscription
+    message: |
+        Bonjour %name%,
+        Pour valider votre compte utilisateur, merci de vous rendre sur <a href="%url%">%url%</a>
+        Ce lien ne peut être utilisé qu'une seule fois pour valider votre compte.
+        Cordialement,
+        L'équipe
 
-invitation_check_email: |
-    Bonjour %name%,
-    Vous avez été invité à créer un compte utilisateur, merci de vous rendre sur <a href="%url%">%url%</a>
-    Cordialement,
-    L'équipe
+invitation:
+    subject: Invitation
+    message: |
+        Bonjour %name%,
+        Vous avez été invité à créer un compte utilisateur, merci de vous rendre sur <a href="%url%">%url%</a>
+        Cordialement,
+        L'équipe
 
-reset_password: |
-   Bonjour %name%,
-   Pour réinitialiser votre mot de passe, merci de vous rendre sur <a href="%url%">%url%</a>
-   Cordialement,
-   L'équipe
+reset_password:
+    subject: Réinitialiser votre mot de passe
+    message: |
+        Bonjour %name%,
+        Pour réinitialiser votre mot de passe, merci de vous rendre sur <a href="%url%">%url%</a>
+        Cordialement,
+        L'équipe

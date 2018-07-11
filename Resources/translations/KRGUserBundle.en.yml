@@ -48,7 +48,7 @@ registration:
   check_email: 'An email has been sent to %email%. It contains an activation link that you will need to click in order to activate your account.'
   confirmed: 'Congratulations %username%, your account is now activated.'
   back: 'Back to the original page.'
-  error: 'Your email address is already used.'
+  email_exists: 'Your email address is already used.'
 
 profile:
   flash:

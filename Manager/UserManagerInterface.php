@@ -2,7 +2,7 @@
 
 namespace KRG\UserBundle\Manager;
 
-use KRG\UserBundle\Entity\UserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 interface UserManagerInterface
 {

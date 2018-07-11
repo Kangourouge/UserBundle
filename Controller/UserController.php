@@ -7,7 +7,7 @@ use KRG\UserBundle\Form\Type\ChangePasswordType;
 use KRG\UserBundle\Form\Type\ProfileType;
 use KRG\UserBundle\Manager\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
@@ -101,7 +101,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('krg_user_show');
         }
 
-        return $this->render('@KRGUser/security/changePassword.html.twig', [
+        return $this->render('@KRGUser/user/changePassword.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
         ]);

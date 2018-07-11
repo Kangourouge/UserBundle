@@ -44,6 +44,11 @@ class KRGUserExtension extends Extension
 
     /**
      * Call a service setter for setting up value
+     *
+     * @param       $serviceName
+     * @param       $setter
+     * @param array $values
+     * @return bool|\Symfony\Component\DependencyInjection\Definition
      */
     public function callServiceSetter($serviceName, $setter, array $values)
     {

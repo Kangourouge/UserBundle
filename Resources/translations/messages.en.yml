@@ -1,0 +1,18 @@
+Security: Security
+Users: Users
+"<i class=\"fa fa-users\"></i> Users": "<i class=\"fa fa-users\"></i> Users"
+email: Email
+password: Password
+gender: Civility
+Firstname: Firstname
+Lastname: Lastname
+createdAt: Created at
+updatedAt: Updated at
+deletedAt: Deleted at
+lastLogin: Last connection
+roles: Roles
+enabled: Active
+
+switch:
+  yourself: You cannot switch on the connected user.
+  twice: You cannot switch user twice.

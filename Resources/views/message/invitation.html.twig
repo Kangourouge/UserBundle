@@ -2,8 +2,8 @@
 {% trans_default_domain 'mails' %}
 
 {% block content %}
-    {{ 'registration_check_email'|trans({
-        '%url%': absolute_url(path('krg_user_registration_confirm', {token: user.confirmationToken})),
+    {{ 'invitation.message'|trans({
+        '%url%': absolute_url(path('krg_user_guess_token', {token: user.invitationToken})),
         '%name%': user.lastname
     }, 'mails')|raw|nl2br }}
 {% endblock %}

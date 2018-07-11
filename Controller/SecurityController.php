@@ -5,7 +5,7 @@ namespace KRG\UserBundle\Controller;
 use KRG\UserBundle\Form\Type\LoginType;
 use KRG\UserBundle\Manager\LoginManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +45,7 @@ class SecurityController extends AbstractController
             ])
             ->add('submit', SubmitType::class, ['label' => 'security.login.submit']);
 
-        return $this->render('@KRGUser/Security/login.html.twig', [
+        return $this->render('@KRGUser/security/login.html.twig', [
             'last_username' => $lastUsername,
             'error'         => $error,
             'form'          => $form->createView()
@@ -53,6 +53,8 @@ class SecurityController extends AbstractController
     }
 
     /**
+     * KRG\UserBundle\Security\Authenticator\TokenAuthenticator
+     *
      * @Route("/guess/{token}", name="krg_user_guess_token")
      */
     public function guessAction()
@@ -79,6 +81,6 @@ class SecurityController extends AbstractController
      */
     public function restrictedAction(Request $request)
     {
-        return $this->render('@KRGUser/Security/restricted.html.twig');
+        return $this->render('@KRGUser/security/restricted.html.twig');
     }
 }

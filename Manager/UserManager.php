@@ -3,7 +3,7 @@
 namespace KRG\UserBundle\Manager;
 
 use Doctrine\ORM\EntityManagerInterface;
-use KRG\UserBundle\Entity\UserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use KRG\UserBundle\Util\Canonicalizer;
 use KRG\UserBundle\Util\PasswordUpdaterInterface;
 use KRG\UserBundle\Util\TokenGenerator;

@@ -29,6 +29,9 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     /**
      * Called on every request. Return whatever credentials you want,
      * or null to stop authentication.
+     *
+     * @param Request $request
+     * @return array|null
      */
     public function getCredentials(Request $request)
     {

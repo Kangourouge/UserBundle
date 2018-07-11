@@ -15,7 +15,7 @@ class InvitationMessage extends AbstractMailMessage
 
     public function getSubject()
     {
-        return $this->translator->trans('mail.subject.invitation', ['user' => $this->user], 'mails');
+        return $this->translator->trans('invitation.subject', ['user' => $this->user], 'mails');
     }
 
     public function configureOptions(OptionsResolver $resolver)

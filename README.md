@@ -94,7 +94,7 @@ EasyAdmin configuration:
 # app/config/admin.yml
 
 parameters:
-    krg_cms.user.class: AppBundle\Entity\User
+    krg_cms.user.class: 'AppBundle\Entity\User'
 
 imports:
     - { resource: '@KRGUserBundle/Resources/config/easyadmin/*.yml' }
@@ -114,9 +114,6 @@ class RegistrationType extends \KRG\UserBundle\Form\Type\RegistrationType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
-
-        $builder
-            ...
     }
 }
 ```

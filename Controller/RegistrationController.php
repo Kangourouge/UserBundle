@@ -9,7 +9,7 @@ use KRG\UserBundle\Form\Type\RegistrationType;
 use KRG\UserBundle\Manager\LoginManagerInterface;
 use KRG\UserBundle\Manager\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -27,6 +28,8 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class RegistrationController extends AbstractController
 {
+    use TargetPathTrait;
+
     /** @var LoginManagerInterface */
     protected $loginManager;
 
@@ -51,13 +54,14 @@ class RegistrationController extends AbstractController
     /** @var string */
     protected $confirmedTargetRoute;
 
-    public function __construct(LoginManagerInterface $loginManager,
-                                UserManagerInterface $userManager,
-                                EventDispatcherInterface $eventDispatcher,
-                                TokenStorageInterface $tokenStorage,
-                                SessionInterface $session,
-                                MessageFactory $messageFactory,
-                                TranslatorInterface $translator)
+    public function __construct(
+        LoginManagerInterface $loginManager,
+        UserManagerInterface $userManager,
+        EventDispatcherInterface $eventDispatcher,
+        TokenStorageInterface $tokenStorage,
+        SessionInterface $session,
+        MessageFactory $messageFactory,
+        TranslatorInterface $translator)
     {
         $this->loginManager = $loginManager;
         $this->userManager = $userManager;
@@ -99,7 +103,7 @@ class RegistrationController extends AbstractController
 
                 return new RedirectResponse($this->generateUrl('krg_user_registration_check_email'));
             } catch (UniqueConstraintViolationException $exception) {
-                $form->addError(new FormError($this->translator->trans('user.email.exists', [], 'validators')));
+                $form->addError(new FormError($this->translator->trans('registration.email_exists', [], 'KRGUserBundle')));
             } catch (\Exception $exception) {
                 $form->addError(new FormError('Error'));
             }
@@ -112,7 +116,6 @@ class RegistrationController extends AbstractController
 
     /**
      * Tell the user to check their email provider.
-     *
      * @Route("/check_email", name="krg_user_registration_check_email")
      */
     public function checkEmailAction(Request $request)
@@ -136,7 +139,6 @@ class RegistrationController extends AbstractController
 
     /**
      * Receive the confirmation token from user email provider, login the user.
-     *
      * @Route("/confirm/{token}", name="krg_user_registration_confirm")
      */
     public function confirmAction(Request $request, $token)
@@ -150,13 +152,13 @@ class RegistrationController extends AbstractController
         $user->setEnabled(true);
         $this->userManager->updateUser($user, true);
 
-        $response = null;
         try {
             $response = new RedirectResponse($this->generateUrl('krg_user_registration_confirmed'));
             $this->loginManager->logInUser($user, $response);
         } catch (AccountStatusException $ex) {
             // We simply do not authenticate users which do not pass the user
             // checker (not enabled, expired, etc.).
+            $response = $this->redirect('/');
         }
 
         return $response;
@@ -176,18 +178,8 @@ class RegistrationController extends AbstractController
 
         return $this->render('@KRGUser/registration/confirmed.html.twig', [
             'user'      => $user,
-            'targetUrl' => $this->confirmedTargetRoute ? $this->generateUrl($this->confirmedTargetRoute) : $this->getTargetUrlFromSession($request->getSession()),
+            'targetUrl' => $this->confirmedTargetRoute ? $this->generateUrl($this->confirmedTargetRoute) : $this->getTargetPath($request->getSession(), $this->tokenStorage->getToken()->getProviderKey()),
         ]);
-    }
-
-    protected function getTargetUrlFromSession(SessionInterface $session)
-    {
-        $key = sprintf('_security.%s.target_path', $this->tokenStorage->getToken()->getProviderKey());
-        if ($session->has($key)) {
-            return $session->get($key);
-        }
-
-        return null;
     }
 
     public function setConfirmedTargetRoute($confirmedTargetRoute)

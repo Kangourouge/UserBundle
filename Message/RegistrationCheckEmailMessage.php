@@ -15,7 +15,7 @@ class RegistrationCheckEmailMessage extends AbstractMailMessage
 
     public function getSubject()
     {
-        return $this->translator->trans('mail.subject.registration_check', ['user' => $this->user], 'mails');
+        return $this->translator->trans('registration.subject', ['user' => $this->user], 'mails');
     }
 
     public function configureOptions(OptionsResolver $resolver)

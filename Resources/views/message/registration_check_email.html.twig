@@ -2,8 +2,8 @@
 {% trans_default_domain 'mails' %}
 
 {% block content %}
-    {{ 'reset_password'|trans({
-        '%url%': absolute_url(path('krg_user_reset', {token: user.confirmationToken})),
+    {{ 'registration.message'|trans({
+        '%url%': absolute_url(path('krg_user_registration_confirm', {token: user.confirmationToken})),
         '%name%': user.lastname
     }, 'mails')|raw|nl2br }}
 {% endblock %}

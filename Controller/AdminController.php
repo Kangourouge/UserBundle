@@ -2,7 +2,7 @@
 
 namespace KRG\UserBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 class AdminController extends \EasyCorp\Bundle\EasyAdminBundle\Controller\AdminController
 {
@@ -20,10 +20,10 @@ class AdminController extends \EasyCorp\Bundle\EasyAdminBundle\Controller\AdminC
         } elseif ($this->isGranted('ROLE_PREVIOUS_ADMIN')) {
             $error = 'switch.twice';
         } else {
-            return $this->redirect(sprintf('%s?_switch_user=%s', $this->generateUrl('homepage'), $entity->getUsername()));
+            return $this->redirect(sprintf('%s?_switch_user=%s', '/', $entity->getUsername()));
         }
 
-        $this->addFlash('danger', $this->get('translator')->trans($error, [], 'error'));
+        $this->addFlash('danger', $this->get('translator')->trans($error, [], 'messages'));
 
         return $this->redirect(sprintf('%s?entity=%s&action=%s', $this->generateUrl('easyadmin'), $easyadmin['entity']['name'], 'list'));
     }

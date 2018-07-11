@@ -15,7 +15,7 @@ class ResetPasswordMessage extends AbstractMailMessage
 
     public function getSubject()
     {
-        return $this->translator->trans('mail.subject.reset_password', ['user' => $this->user], 'mails');
+        return $this->translator->trans('reset_password.subject', ['user' => $this->user], 'mails');
     }
 
     public function configureOptions(OptionsResolver $resolver)

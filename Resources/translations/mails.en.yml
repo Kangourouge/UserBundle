@@ -1,0 +1,24 @@
+registration:
+    subject: Registration
+    message: |
+        Hello %name%,
+        To finish activating your account - please visit <a href="%url%">%url%</a>
+        This link can only be used once to validate your account.
+        Regards,
+        the Team.
+
+invitation:
+    subject: Invitation
+    message: |
+        Hello %name%,
+        You have been invited - please visit <a href="%url%">%url%</a>
+        Regards,
+        the Team.
+
+reset_password:
+    subject: Reset your password
+    message: |
+        Hello %name%,
+        To reset your password - please visit <a href="%url%">%url%</a>
+        Regards,
+        the Team.
