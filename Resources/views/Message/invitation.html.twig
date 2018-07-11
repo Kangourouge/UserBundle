@@ -1,9 +1,9 @@
 {% extends '@KRGMessage/Default/mail.html.twig' %}
+{% trans_default_domain 'mails' %}
 
 {% block content %}
-    INVITATION
-
-    Link: <a href="{{ absolute_url(path('krg_user_guess_token', {token: user.invitationToken})) }}">
-        {{ absolute_url(path('krg_user_guess_token', {token: user.invitationToken})) }}
-    </a>
+    {{ 'invitation_check_email'|trans({
+        '%url%': absolute_url(path('krg_user_guess_token', {token: user.invitationToken})),
+        '%name%': user.lastname
+    }, 'mails')|raw|nl2br }}
 {% endblock %}
