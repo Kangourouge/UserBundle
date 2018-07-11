@@ -1,5 +1,5 @@
 form:
-  email: 'E-mail adress'
+  email: 'E-mail address'
   firstname: Firstname
   lastname: Lastname
   password: Password
@@ -13,6 +13,8 @@ form:
   submit_profile: 'Update profile'
   submit_change_password: 'Change the password'
   submit_reset_password: 'Reset password'
+  _password: 'Password'
+  _username: 'E-mail address'
 
 security:
   login:

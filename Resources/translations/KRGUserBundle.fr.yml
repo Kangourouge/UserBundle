@@ -13,6 +13,8 @@ form:
   submit_profile: 'Mettre à jour mon profil'
   submit_change_password: 'Mettre à jour mon mot de passe'
   submit_reset_password: 'Réinitialiser mon mot de passe'
+  _password: 'Mot de passe'
+  _username: 'Adresse email'
 
 security:
   login:

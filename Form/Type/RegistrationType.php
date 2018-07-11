@@ -15,9 +15,6 @@ use Symfony\Component\Validator\Constraints\IsTrue;
 
 class RegistrationType extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -36,9 +33,6 @@ class RegistrationType extends AbstractType
             ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
@@ -48,9 +42,6 @@ class RegistrationType extends AbstractType
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBlockPrefix()
     {
         return 'krg_user_registration';
