@@ -25,7 +25,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     /** @var string */
     protected $adminTargetRoute;
 
-    public function __construct(HttpUtils $httpUtils, array $options = array(), RouterInterface $router, ValidatorInterface $validator)
+    public function __construct(HttpUtils $httpUtils, array $options = [], RouterInterface $router, ValidatorInterface $validator)
     {
         parent::__construct($httpUtils, $options);
 
@@ -38,13 +38,11 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
-        if (self::hasAdminRole($token->getRoles()) && $this->adminTargetRoute) {
-            $path = $this->adminTargetRoute;
-        } else {
-            $path = $this->determineTargetUrl($request, $token);
+        if ($this->adminTargetRoute && $token->getUser()->isAdmin()) {
+            $this->setDefaultTargetPath($this->adminTargetRoute);
         }
 
-        return $this->httpUtils->createRedirectResponse($request, $path);
+        return $this->httpUtils->createRedirectResponse($request,  $this->determineTargetUrl($request));
     }
 
     /**
@@ -59,16 +57,12 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         return parent::determineTargetUrl($request);
     }
 
-    protected static function hasAdminRole(array $roles)
+    protected function setDefaultTargetPath(string $targetPath)
     {
-        /* @var $role Role */
-        foreach ($roles as $role) {
-            if (in_array($role->getRole(), [UserInterface::ROLE_SUPER_ADMIN, UserInterface::ROLE_ADMIN])) {
-                return true;
-            }
-        }
-
-        return false;
+        $this->setOptions(array_merge($this->getOptions(), [
+            'default_target_path'            => $targetPath,
+            'always_use_default_target_path' => true,
+        ]));
     }
 
     public function setAdminTargetRoute(string $adminTargetRoute)
@@ -78,9 +72,6 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
 
     public function setUserTargetRoute(string $userTargetRoute)
     {
-        $this->setOptions(array_merge($this->getOptions(), [
-            'default_target_path'            => $userTargetRoute,
-            'always_use_default_target_path' => true,
-        ]));
+        $this->setDefaultTargetPath($userTargetRoute);
     }
 }

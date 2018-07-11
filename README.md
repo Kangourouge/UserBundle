@@ -36,9 +36,9 @@ krg_user:
 security:
     providers:
         email_provider:
-            entity: { class: AppBundle:User, property: emailCanonical }
+            entity: { class: KRG\UserBundle\Entity\UserInterface, property: emailCanonical }
         invitation_token_provider:
-            entity: { class: AppBundle:User, property: invitationToken }
+            entity: { class: KRG\UserBundle\Entity\UserInterface, property: invitationToken }
             
     firewalls:
         ...
