@@ -1,20 +1,21 @@
 form:
-  email: 'E-mail address'
-  firstname: Firstname
-  lastname: Lastname
-  password: Password
-  new_password: 'New Password'
-  new_password_confirmation: 'Confirm the new password'
-  password_confirmation: 'Password confirmation'
-  current_password: 'Current Password'
-  terms: 'I accept the general terms of use'
-  submit: Send
-  submit_registration: Registration
-  submit_profile: 'Update profile'
-  submit_change_password: 'Change the password'
-  submit_reset_password: 'Reset password'
-  _password: 'Password'
-  _username: 'E-mail address'
+  user:
+    email: 'E-mail address'
+    firstname: Firstname
+    lastname: Lastname
+    password: Password
+    new_password: 'New Password'
+    new_password_confirmation: 'Confirm the new password'
+    password_confirmation: 'Password confirmation'
+    current_password: 'Current Password'
+    terms: 'I accept the general terms of use'
+    submit: Send
+    submit_registration: Registration
+    submit_profile: 'Update profile'
+    submit_change_password: 'Change the password'
+    submit_reset_password: 'Reset password'
+    _password: 'Password'
+    _username: 'E-mail address'
 
 security:
   login:

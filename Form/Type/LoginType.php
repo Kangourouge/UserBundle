@@ -18,11 +18,11 @@ class LoginType extends AbstractType
         $builder
             ->add('_username', EmailType::class, [
                 'property_path' => 'email',
-                'label'         => 'form.email'
+                'label'         => 'form.user.email'
             ])
             ->add('_password', PasswordType::class, [
                 'property_path' => 'password',
-                'label'         => 'form.password'
+                'label'         => 'form.user.password'
             ])
             ->add('_remember_me', CheckboxType::class, [
                 'mapped'   => false,
@@ -34,6 +34,7 @@ class LoginType extends AbstractType
                 'data'   => $options['target_path']
             ]);
     }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver

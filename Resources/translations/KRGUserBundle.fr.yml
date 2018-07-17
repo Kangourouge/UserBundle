@@ -1,20 +1,21 @@
 form:
-  email: 'Adresse email'
-  firstname: Prénom
-  lastname: Nom
-  password: 'Mot de passe'
-  new_password: 'Nouveau mot de passe'
-  new_password_confirmation: 'Confirmer le nouveau mot de passe'
-  password_confirmation: 'Confirmation mot de passe'
-  current_password: 'Mot de passe actuel'
-  terms: 'J''accepte les conditions générales d''utilisation'
-  submit: Envoyer
-  submit_registration: Inscription
-  submit_profile: 'Mettre à jour mon profil'
-  submit_change_password: 'Mettre à jour mon mot de passe'
-  submit_reset_password: 'Réinitialiser mon mot de passe'
-  _password: 'Mot de passe'
-  _username: 'Adresse email'
+  user:
+    email: 'Adresse email'
+    firstname: 'Prénom'
+    lastname: 'Nom'
+    password: 'Mot de passe'
+    new_password: 'Nouveau mot de passe'
+    new_password_confirmation: 'Confirmer le nouveau mot de passe'
+    password_confirmation: 'Confirmation mot de passe'
+    current_password: 'Mot de passe actuel'
+    terms: 'J''accepte les conditions générales d''utilisation'
+    submit: Envoyer
+    submit_registration: Inscription
+    submit_profile: 'Mettre à jour mon profil'
+    submit_change_password: 'Mettre à jour mon mot de passe'
+    submit_reset_password: 'Réinitialiser mon mot de passe'
+    _password: 'Mot de passe'
+    _username: 'Adresse email'
 
 security:
   login:
