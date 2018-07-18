@@ -10,12 +10,17 @@ class ResetPasswordMessage extends AbstractMailMessage
 {
     public function getTo()
     {
-        return $this->user->getEmail();
+        return $this->getOption('user')->getEmail();
     }
 
     public function getSubject()
     {
-        return $this->translator->trans('reset_password.subject', ['user' => $this->user], 'mails');
+        return $this->translator->trans('reset_password.subject', ['user' => $this->getOption('user')], 'mails');
+    }
+
+    protected function getTemplate()
+    {
+        return '@KRGUser/message/reset_password.html.twig';
     }
 
     public function configureOptions(OptionsResolver $resolver)

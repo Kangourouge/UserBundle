@@ -2,10 +2,13 @@
 
 namespace KRG\UserBundle\Controller;
 
+use KRG\MessageBundle\Event\MessageDecorator;
+use KRG\MessageBundle\Event\MessageInterface;
 use KRG\UserBundle\Form\Type\ResetRequestType;
 use KRG\UserBundle\Manager\LoginManagerInterface;
 use KRG\UserBundle\Manager\UserManagerInterface;
 use KRG\UserBundle\Form\Type\ResetType;
+use KRG\UserBundle\Message\ResetPasswordMessage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -80,8 +83,8 @@ class ResetController extends AbstractController
             $this->userManager->createConfirmationToken($user);
             $this->userManager->updateUser($user, true);
 
-//            $this->messageFactory->create(ResetPasswordMessage::class, ['user' => $user]);
-//            $this->dispatcher->dispatch(MessageEvents::SEND);
+            /** @var $message MessageDecorator */
+            $this->messageFactory->create(ResetPasswordMessage::class, ['user' => $user])->send();
 
             return $this->redirectToRoute('krg_user_reset_request_send');
         }

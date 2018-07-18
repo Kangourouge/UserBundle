@@ -2,7 +2,7 @@
 {% trans_default_domain 'KRGUserBundle' %}
 
 {% block content %}
-    <p>{{ 'registration.confirmed'|trans({'%username%': user.username}) }}</p>
+    <p>{{ 'registration.confirmed'|trans({'%firstname%': user.firstname}) }}</p>
 
     {% if targetUrl %}
         <p><a href="{{ targetUrl }}">{{ 'registration.back'|trans }}</a></p>

@@ -1,5 +1,5 @@
 registration:
-    subject: Inscription
+    subject: Confirmation de votre adresse email
     message: |
         Bonjour %name%,
         Pour valider votre compte utilisateur, merci de vous rendre sur <a href="%url%">%url%</a>

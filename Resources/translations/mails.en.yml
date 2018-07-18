@@ -1,5 +1,5 @@
 registration:
-    subject: Registration
+    subject: Address email confirmation
     message: |
         Hello %name%,
         To finish activating your account - please visit <a href="%url%">%url%</a>

@@ -8,6 +8,7 @@ use KRG\UserBundle\Entity\UserInterface;
 use KRG\UserBundle\Form\Type\RegistrationType;
 use KRG\UserBundle\Manager\LoginManagerInterface;
 use KRG\UserBundle\Manager\UserManagerInterface;
+use KRG\UserBundle\Message\RegistrationCheckEmailMessage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -96,8 +97,7 @@ class RegistrationController extends AbstractController
                 $this->userManager->createConfirmationToken($user);
                 $this->userManager->updateUser($user, true);
 
-//                $this->messageFactory->create(RegistrationCheckEmailMessage::class, ['user' => $user]);
-//                $this->dispatcher->dispatch(MessageEvents::SEND);
+                $this->messageFactory->create(RegistrationCheckEmailMessage::class, ['user' => $user])->send();
 
                 $this->session->set('krg_user_send_confirmation_email/email', $user->getEmail());
 
