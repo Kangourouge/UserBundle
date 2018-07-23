@@ -40,7 +40,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
             $this->setDefaultTargetPath($this->adminTargetRoute);
         }
 
-        return $this->httpUtils->createRedirectResponse($request,  $this->determineTargetUrl($request));
+        return $this->httpUtils->createRedirectResponse($request, $this->determineTargetUrl($request));
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace KRG\UserBundle\OAuth;
+namespace KRG\UserBundle\Security;
 
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use KRG\UserBundle\Manager\UserManagerInterface;
@@ -33,13 +33,14 @@ class KRGUBUserProvider extends \HWI\Bundle\OAuthBundle\Security\Core\User\FOSUB
     public function connect(UserInterface $user, UserResponseInterface $response)
     {
         if (!$user instanceof UserInterface) {
-            throw new UnsupportedUserException(sprintf('Expected an instance of FOS\UserBundle\Model\User, but got "%s".', get_class($user)));
+            throw new UnsupportedUserException(sprintf('Expected an instance of Symfony\Component\Security\Core\User\UserInterface, but got "%s".', get_class($user)));
         }
 
         $property = $this->getProperty($response);
         $username = $response->getUsername();
 
-        if (null !== $previousUser = $this->userManager->findUserBy(array($property => $username))) {
+        $previousUser = $this->userManager->findUserBy([$property => $username]);
+        if (null !== $previousUser) {
             $this->disconnect($previousUser, $response);
         }
 
