@@ -499,12 +499,18 @@ class User implements UserInterface, \Serializable
      */
     public function addRole($role)
     {
+        if (is_array($role)) {
+            foreach ($role as $_role) {
+                return $this->addRole($_role);
+            }
+        }
+
         $role = strtoupper($role);
         if ($role === static::ROLE_DEFAULT) {
             return $this;
         }
 
-        if (!in_array($role, $this->roles, true)) {
+        if (false === in_array($role, $this->roles, true)) {
             $this->roles[] = $role;
         }
 
