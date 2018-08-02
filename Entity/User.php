@@ -501,8 +501,10 @@ class User implements UserInterface, \Serializable
     {
         if (is_array($role)) {
             foreach ($role as $_role) {
-                return $this->addRole($_role);
+                $this->addRole($_role);
             }
+
+            return $this;
         }
 
         $role = strtoupper($role);
