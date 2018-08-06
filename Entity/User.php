@@ -9,6 +9,7 @@ use KRG\UserBundle\Annotation\PrivateData;
 use KRG\UserBundle\Doctrine\DBAL\GenderEnum;
 use KRG\UserBundle\Util\Canonicalizer;
 use Gedmo\Mapping\Annotation as Gedmo;
+use KRG\UserBundle\Validator\Constraint\EmailUnique;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -48,6 +49,17 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="string", unique=true)
      */
     protected $emailCanonical;
+
+    /**
+     * @EmailUnique()
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $emailAlteration;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $emailBackup;
 
     /**
      * @PrivateData(replaceWith="John")
@@ -101,6 +113,11 @@ class User implements UserInterface, \Serializable
      * @var string
      */
     protected $invitationToken;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $cancelAlterationToken;
 
     /**
      * @ORM\Column(type="boolean")
@@ -309,6 +326,54 @@ class User implements UserInterface, \Serializable
     }
 
     /**
+     * Get email alteration
+     *
+     * @return string
+     */
+    public function getEmailAlteration()
+    {
+        return $this->emailAlteration;
+    }
+
+    /**
+     * Set email alteration
+     *
+     * @param string $emailAlteration
+     *
+     * @return User
+     */
+    public function setEmailAlteration($emailAlteration)
+    {
+        $this->emailAlteration = $emailAlteration;
+
+        return $this;
+    }
+
+    /**
+     * Get email backup
+     *
+     * @return string
+     */
+    public function getEmailBackup()
+    {
+        return $this->emailBackup;
+    }
+
+    /**
+     * Set email backup
+     *
+     * @param string $emailBackup
+     *
+     * @return User
+     */
+    public function setEmailBackup($emailBackup)
+    {
+        $this->emailBackup = $emailBackup;
+
+        return $this;
+    }
+
+    /**
      * Set firstname
      *
      * @param string $firstname
@@ -489,6 +554,30 @@ class User implements UserInterface, \Serializable
     public function getInvitationToken()
     {
         return $this->invitationToken;
+    }
+
+    /**
+     * Set alteration token
+     *
+     * @param string $cancelAlterationToken
+     *
+     * @return User
+     */
+    public function setCancelAlterationToken($cancelAlterationToken)
+    {
+        $this->cancelAlterationToken = $cancelAlterationToken;
+
+        return $this;
+    }
+
+    /**
+     * Get alteration token
+     *
+     * @return string
+     */
+    public function getCancelAlterationToken()
+    {
+        return $this->cancelAlterationToken;
     }
 
     /**

@@ -6,7 +6,7 @@ use KRG\UserBundle\Entity\UserInterface;
 use KRG\MessageBundle\Event\AbstractMailMessage;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class InvitationMessage extends AbstractMailMessage
+class ChangeEmailCancelMessage extends AbstractMailMessage
 {
     public function getTo()
     {
@@ -15,7 +15,12 @@ class InvitationMessage extends AbstractMailMessage
 
     public function getSubject()
     {
-        return $this->translator->trans('invitation.subject', ['user' => $this->getOption('user')], 'mails');
+        return $this->translator->trans('change_email_cancel.subject', ['user' => $this->getOption('user')], 'mails');
+    }
+
+    protected function getTemplate()
+    {
+        return '@KRGUser/message/change_email_cancel.html.twig';
     }
 
     public function configureOptions(OptionsResolver $resolver)

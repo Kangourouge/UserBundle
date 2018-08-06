@@ -3,20 +3,21 @@
 namespace KRG\UserBundle\Manager;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use KRG\UserBundle\Util\Canonicalizer;
-use KRG\UserBundle\Util\PasswordUpdaterInterface;
 use KRG\UserBundle\Util\TokenGenerator;
+use KRG\UserBundle\Util\PasswordUpdaterInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserManager implements UserManagerInterface
 {
     /** @var PasswordUpdaterInterface */
-    private $passwordUpdater;
-
+    protected $passwordUpdater;
     /** @var EntityManagerInterface */
-    private $entityManager;
+    protected $entityManager;
 
-    public function __construct(PasswordUpdaterInterface $passwordUpdater, EntityManagerInterface $entityManager)
+    public function __construct(
+        PasswordUpdaterInterface $passwordUpdater,
+        EntityManagerInterface $entityManager)
     {
         $this->passwordUpdater = $passwordUpdater;
         $this->entityManager = $entityManager;
@@ -59,6 +60,13 @@ class UserManager implements UserManagerInterface
         if (strlen($user->getConfirmationToken()) === 0) {
             $user->setEnabled(false);
             $user->setConfirmationToken(TokenGenerator::generateToken());
+        }
+    }
+
+    public function createCancelAlterationToken(UserInterface $user)
+    {
+        if (strlen($user->getCancelAlterationToken()) === 0) {
+            $user->setCancelAlterationToken(TokenGenerator::generateToken());
         }
     }
 
@@ -108,6 +116,11 @@ class UserManager implements UserManagerInterface
     public function findUserByConfirmationToken($token)
     {
         return $this->findUserBy(['confirmationToken' => $token]);
+    }
+
+    public function findUserByCancelAlterationToken($token)
+    {
+        return $this->findUserBy(['cancelAlterationToken' => $token]);
     }
 
     public function updatePassword(UserInterface $user)

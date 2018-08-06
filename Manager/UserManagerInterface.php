@@ -32,5 +32,7 @@ interface UserManagerInterface
 
     public function findUserByConfirmationToken($token);
 
+    public function findUserByCancelAlterationToken($token);
+
     public function updatePassword(UserInterface $user);
 }
