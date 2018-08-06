@@ -89,7 +89,7 @@ class UserController extends AbstractController
         $form = $this
             ->createForm(ChangePasswordType::class)
             ->setData($user)
-            ->add('submit', SubmitType::class, ['label' => 'form.submit_change_password']);
+            ->add('submit', SubmitType::class, ['label' => 'form.user.submit_change_password']);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
