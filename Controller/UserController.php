@@ -106,7 +106,7 @@ class UserController extends AbstractController
             $user = $form->getData();
 
             $this->userManager->updateUser($user, true);
-            $this->addFlash('notice', $this->translator->trans('change_password.flash.success', [], 'KRGUserBundle'));
+            $this->addFlash('success', $this->translator->trans('change_password.flash.success', [], 'KRGUserBundle'));
 
             return $this->redirectToRoute('krg_user_show');
         }

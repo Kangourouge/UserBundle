@@ -1,0 +1,4 @@
+form:
+  user:
+    password:
+      mismatch: 'The entered passwords don''t match.'

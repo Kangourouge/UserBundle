@@ -44,7 +44,9 @@ resetting:
 
 change_password:
   submit: 'Modifier le mot de passe'
-  flash.success: 'Le mot de passe a été modifié.'
+  flash:
+    success: 'Le mot de passe a été modifié.'
+  help: 'Modifier le mot de passe'
 
 registration:
   check_email: 'Un e-mail a été envoyé à l''adresse %email%. Il contient un lien d''activation sur lequel il vous faudra cliquer afin d''activer votre compte.'
