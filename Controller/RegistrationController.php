@@ -156,8 +156,6 @@ class RegistrationController extends AbstractController
             $response = new RedirectResponse($this->generateUrl('krg_user_registration_confirmed'));
             $this->loginManager->logInUser($user, $response);
         } catch (AccountStatusException $ex) {
-            // We simply do not authenticate users which do not pass the user
-            // checker (not enabled, expired, etc.).
             $response = $this->redirect('/');
         }
 

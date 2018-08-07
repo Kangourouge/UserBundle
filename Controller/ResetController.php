@@ -3,7 +3,6 @@
 namespace KRG\UserBundle\Controller;
 
 use KRG\MessageBundle\Event\MessageDecorator;
-use KRG\MessageBundle\Event\MessageInterface;
 use KRG\UserBundle\Form\Type\ResetRequestType;
 use KRG\UserBundle\Manager\LoginManagerInterface;
 use KRG\UserBundle\Manager\UserManagerInterface;

@@ -1,6 +1,7 @@
 form:
   user:
     email: 'E-mail address'
+    email_alteration: 'New e-mail address'
     firstname: Firstname
     lastname: Lastname
     password: Password
@@ -14,6 +15,7 @@ form:
     submit_profile: 'Update profile'
     submit_change_password: 'Change the password'
     submit_reset_password: 'Reset password'
+    submit_change_email: 'Change the email'
     _password: 'Password'
     _username: 'E-mail address'
 
@@ -54,3 +56,10 @@ registration:
 profile:
   flash:
     success: 'Your profile has been updated.'
+
+email_alteration:
+  flash:
+    check_email: 'An email has been sent. It contains an activation link that you will need to click in order to update your email address.'
+    success: 'Your email address has been updated.'
+    cancel: 'Your email address has been restored.'
+  help: 'After your update, a confirmation email with an activation link will be sent and you will be logged out.'

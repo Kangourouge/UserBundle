@@ -2,5 +2,7 @@
 {% trans_default_domain 'KRGUserBundle' %}
 
 {% block content %}
+    <p>{{ 'email_alteration.help'|trans({}, 'KRGUserBundle') }}</p>
+
     {{ form(form) }}
 {% endblock %}

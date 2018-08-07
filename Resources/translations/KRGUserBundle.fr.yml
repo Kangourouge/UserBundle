@@ -1,6 +1,7 @@
 form:
   user:
     email: 'Adresse email'
+    email_alteration: 'Nouvelle adresse email'
     firstname: 'Prénom'
     lastname: 'Nom'
     password: 'Mot de passe'
@@ -14,6 +15,7 @@ form:
     submit_profile: 'Mettre à jour mon profil'
     submit_change_password: 'Mettre à jour mon mot de passe'
     submit_reset_password: 'Réinitialiser mon mot de passe'
+    submit_change_email: 'Mettre à jour mon adresse email'
     _password: 'Mot de passe'
     _username: 'Adresse email'
 
@@ -53,3 +55,12 @@ registration:
 profile:
   flash:
     success: 'Votre profil à été mis à jour.'
+
+email_alteration:
+  flash:
+    check_email: |
+      Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour modifier votre adresse e-mail.
+      Si vous ne recevez pas un email, vérifiez votre dossier spam.
+    success: 'Votre adresse e-mail a bien été mise à jour'
+    cancel: 'Votre adresse e-mail a bien été restaurée'
+  help: 'Une fois votre adresse e-mail modifiée, un mail de confirmation vous sera envoyé sur votre nouvelle adresse et vous serez déconnecté.'
