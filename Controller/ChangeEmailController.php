@@ -57,9 +57,12 @@ class ChangeEmailController extends AbstractController
         }
 
         $form = $this
-            ->createForm(ChangeEmailType::class)
-            ->setData($user)
-            ->add('submit', SubmitType::class, ['label' => 'form.user.submit_change_email']);
+            ->createForm(ChangeEmailType::class, $user, [
+                'action' => $this->generateUrl('krg_user_change_email'),
+            ])
+            ->add('submit', SubmitType::class, [
+                'label'  => 'form.user.submit_change_email',
+            ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

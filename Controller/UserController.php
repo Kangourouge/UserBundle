@@ -59,9 +59,12 @@ class UserController extends AbstractController
         }
 
         $form = $this
-            ->createForm(ProfileType::class)
-            ->setData($user)
-            ->add('submit', SubmitType::class, ['label' => 'form.submit_profile']);
+            ->createForm(ProfileType::class, $user, [
+                'action' => $this->generateUrl('krg_user_edit'),
+            ])
+            ->add('submit', SubmitType::class, [
+                'label'  => 'form.submit_profile',
+            ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -91,9 +94,12 @@ class UserController extends AbstractController
         }
 
         $form = $this
-            ->createForm(ChangePasswordType::class)
-            ->setData($user)
-            ->add('submit', SubmitType::class, ['label' => 'form.user.submit_change_password']);
+            ->createForm(ChangePasswordType::class, $user, [
+                'action' => $this->generateUrl('krg_user_change_password'),
+            ])
+            ->add('submit', SubmitType::class, [
+                'label'  => 'form.user.submit_change_password',
+            ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
