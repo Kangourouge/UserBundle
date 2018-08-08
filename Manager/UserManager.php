@@ -136,11 +136,37 @@ class UserManager implements UserManagerInterface
         return $this->passwordUpdater;
     }
 
+    public function addSponsorCode(UserInterface $user)
+    {
+        if (strlen($user->getSponsorCode() > 0)) {
+            return null;
+        }
+
+        $code = null;
+        while (1) {
+            $code = self::generateSponsorCode();
+            $exists = $this->findUserBy(['sponsorCode' => $code]);
+
+            if (null === $exists) {
+                break;
+            }
+        }
+
+        $user->setSponsorCode($code);
+        $this->updateUser($user, true);
+    }
+
+    static public function generateSponsorCode(int $length = 8)
+    {
+        return substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $length);
+    }
+
     public function createGodfatherRelation(UserInterface $user, string $sponsorCode)
     {
         $godfather = $this->findUserBy(['sponsorCode' => $sponsorCode]);
         if ($godfather) {
             $user->setGodfather($godfather);
+            $this->updateUser($godfather);
         }
 
         return $user;

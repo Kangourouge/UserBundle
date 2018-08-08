@@ -121,7 +121,8 @@ class RegistrationController extends AbstractController
             } catch (UniqueConstraintViolationException $exception) {
                 $form->addError(new FormError($this->translator->trans('registration.email_exists', [], 'KRGUserBundle')));
             } catch (\Exception $exception) {
-                $form->addError(new FormError('Error'));
+                dump($exception);
+                $form->addError(new FormError('Unknown Error'));
             }
         }
 

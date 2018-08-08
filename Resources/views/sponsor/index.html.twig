@@ -3,4 +3,13 @@
 
 {% block content %}
     {{ form(form) }}
+
+    {% set pendingGodsons = app.user.pendingGodsons %}
+    {% if pendingGodsons|length %}
+        <ul>
+            {% for email in app.user.pendingGodsons %}
+                <li>{{ email }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}

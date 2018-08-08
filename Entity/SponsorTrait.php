@@ -21,6 +21,11 @@ trait SponsorTrait
     protected $godfather;
 
     /**
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    protected $pendingGodsons;
+
+    /**
      * @return string
      */
     public function getSponsorCode()
@@ -46,6 +51,8 @@ trait SponsorTrait
     public function addGodson(UserInterface $godson)
     {
         $this->godsons[] = $godson;
+
+        $godson->getGodfather()->removePendingGodson($godson->getEmail());
 
         return $this;
     }
@@ -80,6 +87,7 @@ trait SponsorTrait
     public function setGodfather(UserInterface $godfather = null)
     {
         $this->godfather = $godfather;
+
         $godfather->addGodson($this);
 
         return $this;
@@ -93,5 +101,80 @@ trait SponsorTrait
     public function getGodfather()
     {
         return $this->godfather;
+    }
+
+    /**
+     * Add pendingGodson
+     *
+     * @param $email
+     * @return $this
+     */
+    public function addPendingGodson(string $email)
+    {
+        if (false === in_array($email, $this->pendingGodsons, true)) {
+            $this->pendingGodsons[] = $email;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove pendingGodson
+     *
+     * @param $email
+     * @return $this
+     */
+    public function removePendingGodson(string $email)
+    {
+        if (false !== $key = array_search(strtoupper($email), $this->pendingGodsons, true)) {
+            unset($this->pendingGodsons[$key]);
+            $this->pendingGodsons = array_values($this->pendingGodsons);
+        }
+
+        $pendingGodsons = array_combine($this->pendingGodsons, $this->pendingGodsons);
+        if (isset($pendingGodsons[$email])) {
+            unset($pendingGodsons[$email]);
+        }
+        $this->setPendingGodsons($pendingGodsons);
+
+        return $this;
+    }
+
+    /**
+     * Set pendingGodsons
+     *
+     * @param array $pendingGodsons
+     *
+     * @return User
+     */
+    public function setPendingGodsons(array $pendingGodsons)
+    {
+        $this->pendingGodsons = [];
+
+        foreach ($pendingGodsons as $email) {
+            $this->addPendingGodson($email);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get pendingGodsons
+     *
+     * @return array
+     */
+    public function getPendingGodsons()
+    {
+       return $this->pendingGodsons;
+    }
+
+    /**
+     * Has pendingGodson
+     *
+     * @return array
+     */
+    public function hasPendingGodson(string $email)
+    {
+        return in_array($email, $this->pendingGodsons);
     }
 }

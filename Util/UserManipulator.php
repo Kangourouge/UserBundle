@@ -3,7 +3,6 @@
 namespace KRG\UserBundle\Util;
 
 use KRG\UserBundle\Manager\UserManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -134,31 +133,5 @@ class UserManipulator
         }
 
         return $user;
-    }
-
-    public function addSponsorCode($username)
-    {
-        $user = $this->findUserByUsernameOrThrowException($username);
-        if (strlen($user->getSponsorCode() > 0)) {
-            return null;
-        }
-
-        $code = null;
-        while (1) {
-            $code = self::generateSponsorCode();
-            $exists = $this->userManager->findUserBy(['sponsorCode' => $code]);
-
-            if (null === $exists) {
-                break;
-            }
-        }
-
-        $user->setSponsorCode($code);
-        $this->userManager->updateUser($user, true);
-    }
-
-    static public function generateSponsorCode(int $length = 8)
-    {
-        return substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $length);
     }
 }

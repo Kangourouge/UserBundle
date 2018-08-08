@@ -7,6 +7,7 @@ use KRG\MessageBundle\Service\Factory\MessageFactory;
 use KRG\UserBundle\DependencyInjection\KRGUserExtension;
 use KRG\UserBundle\Entity\UserInterface;
 use KRG\UserBundle\Form\Type\SponsoringType;
+use KRG\UserBundle\Manager\UserManager;
 use KRG\UserBundle\Message\SponsoringMessage;
 use KRG\UserBundle\Util\UserManipulator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,8 +25,8 @@ class SponsorController extends AbstractController
     /** @var MessageFactory */
     protected $messageFactory;
 
-    /** @var UserManipulator */
-    protected $userManipulator;
+    /** @var UserManager */
+    protected $userManager;
 
     /** @var EntityManagerInterface */
     protected $entityManager;
@@ -35,13 +36,13 @@ class SponsorController extends AbstractController
 
     public function __construct(
         MessageFactory $messageFactory,
-        UserManipulator $userManipulator,
+        UserManager $userManager,
         EntityManagerInterface $entityManager,
         TranslatorInterface $translator
     )
     {
         $this->messageFactory = $messageFactory;
-        $this->userManipulator = $userManipulator;
+        $this->userManager = $userManager;
         $this->entityManager = $entityManager;
         $this->translator = $translator;
     }
@@ -59,7 +60,7 @@ class SponsorController extends AbstractController
             ->add('submit', SubmitType::class, ['label' => 'form.submit_sponsoring']);
 
         // Add sponsor code if it does not exists
-        $this->userManipulator->addSponsorCode($user->getEmailCanonical());
+        $this->userManager->addSponsorCode($user);
 
         // Registration url with sponsor code
         $url = sprintf('%s?%s=%s',
@@ -72,24 +73,24 @@ class SponsorController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $success = false;
-
             // Send mail to each user
             foreach ($data['emails'] as $email) {
                 if (strlen($email) > 0) {
-                    if (null === $this->entityManager->getRepository(UserInterface::class)->findOneBy(['email' => $email])) {
-                        $this->messageFactory->create(SponsoringMessage::class, [
-                            'user' => $user,
-                            'url'  => sprintf('%s&email=%s', $url, $email),
-                        ])->send();
+                    if (false === $user->hasPendingGodson($email)) {
+                        if (null === $this->entityManager->getRepository(UserInterface::class)->findOneBy(['email' => $email])) {
+                            $this->messageFactory->create(SponsoringMessage::class, [
+                                'user' => $user,
+                                'url'  => sprintf('%s&email=%s', $url, $email),
+                            ])->send();
+                        }
+
+                        $user->addPendingGodson($email);
                     }
-                    $success = true;
                 }
             }
 
-            if ($success) {
-                $this->addFlash('success', $this->translator->trans('sponsor.flash.success', [], 'KRGUserBundle'));
-            }
+            $this->userManager->updateUser($user, true);
+            $this->addFlash('success', $this->translator->trans('sponsor.flash.success', [], 'KRGUserBundle'));
 
             return $this->redirectToRoute('krg_user_show');
         }
