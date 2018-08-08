@@ -6,6 +6,6 @@ easy_admin:
         menu:
             -
                 label: 'menu.krg_user'
-                priority: 1
+                priority: 5
                 children:
                     - { entity: 'User', icon: 'users', label: 'menu.user' }
