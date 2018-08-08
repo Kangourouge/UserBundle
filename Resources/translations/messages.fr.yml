@@ -1,5 +1,3 @@
-Security: Sécurité
-Users: Utilisateurs
 "<i class=\"fa fa-users\"></i> Users": "<i class=\"fa fa-users\"></i> Utilisateurs"
 email: Email
 password: Mot de passe
@@ -16,3 +14,8 @@ enabled: Actif
 switch:
   yourself: Vous ne pouvez pas basculer sur l'utilisateur avec lequel vous êtes connecté.
   twice: Vous ne pouvez pas basculer d'utilisateur deux fois.
+
+menu:
+  krg_user: Sécurité
+  user: Utilisateur
+
