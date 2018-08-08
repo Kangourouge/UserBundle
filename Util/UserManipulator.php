@@ -136,11 +136,29 @@ class UserManipulator
         return $user;
     }
 
-    /**
-     * @return Request
-     */
-    private function getRequest()
+    public function addSponsorCode($username)
     {
-        return $this->requestStack->getCurrentRequest();
+        $user = $this->findUserByUsernameOrThrowException($username);
+        if (strlen($user->getSponsorCode() > 0)) {
+            return null;
+        }
+
+        $code = null;
+        while (1) {
+            $code = self::generateSponsorCode();
+            $exists = $this->userManager->findUserBy(['sponsorCode' => $code]);
+
+            if (null === $exists) {
+                break;
+            }
+        }
+
+        $user->setSponsorCode($code);
+        $this->userManager->updateUser($user, true);
+    }
+
+    static public function generateSponsorCode(int $length = 8)
+    {
+        return substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $length);
     }
 }

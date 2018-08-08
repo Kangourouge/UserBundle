@@ -135,4 +135,14 @@ class UserManager implements UserManagerInterface
     {
         return $this->passwordUpdater;
     }
+
+    public function createGodfatherRelation(UserInterface $user, string $sponsorCode)
+    {
+        $godfather = $this->findUserBy(['sponsorCode' => $sponsorCode]);
+        if ($godfather) {
+            $user->setGodfather($godfather);
+        }
+
+        return $user;
+    }
 }

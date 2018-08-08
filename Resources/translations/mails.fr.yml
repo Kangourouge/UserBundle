@@ -1,5 +1,5 @@
 registration:
-    subject: Confirmation de votre adresse email
+    subject: 'Confirmation de votre adresse email'
     message: |
         Bonjour %name%,
         Pour valider votre compte utilisateur, merci de vous rendre sur <a href="%url%">%url%</a>
@@ -8,7 +8,7 @@ registration:
         L'équipe
 
 invitation:
-    subject: Invitation
+    subject: 'Invitation à nous rejoindre'
     message: |
         Bonjour %name%,
         Vous avez été invité à créer un compte utilisateur, merci de vous rendre sur <a href="%url%">%url%</a>
@@ -16,7 +16,7 @@ invitation:
         L'équipe
 
 reset_password:
-    subject: Réinitialiser votre mot de passe
+    subject: 'Réinitialiser votre mot de passe'
     message: |
         Bonjour %name%,
         Pour réinitialiser votre mot de passe, merci de vous rendre sur <a href="%url%">%url%</a>
@@ -24,7 +24,7 @@ reset_password:
         L'équipe
 
 change_email:
-    subject: Confirmez le changement de votre d’adresse email
+    subject: 'Confirmez le changement de votre d’adresse email'
     message: |
         Bonjour %name%,
         Pour valider votre nouvelle adresse email, merci de vous rendre sur <a href="%url%">%url%</a>
@@ -33,11 +33,19 @@ change_email:
         L'équipe
 
 change_email_cancel:
-    subject: Changement d’adresse email
+    subject: 'Changement d’adresse email'
     message: |
         Bonjour %name%,
         Vous avez choisi de modifier votre adresse email sur la plateforme ComAll.
         Si vous n’êtes pas à l’origine de cette action, vous pouvez annuler la modification en cliquant sur <a href="%url%">%url%</a>
         Ce lien ne peut être utilisé qu'une seule fois pour changer d'adresse email.
+        Cordialement
+        L'équipe
+
+sponsoring:
+    subject: '%firstname% %lastname% vous invite à nous rejoindre'
+    message: |
+        Bonjour,
+        %firstname% %lastname% vous invite à nous rejoindre en cliquant sur <a href="%url%">%url%</a>
         Cordialement
         L'équipe

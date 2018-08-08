@@ -20,6 +20,7 @@ class User implements UserInterface, \Serializable
 {
     use TimestampableEntity;
     use SoftDeleteableEntity;
+    use SponsorTrait;
 
     /**
      * @ORM\Id

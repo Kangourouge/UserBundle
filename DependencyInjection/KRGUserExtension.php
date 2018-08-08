@@ -11,6 +11,8 @@ use Symfony\Component\DependencyInjection\Loader;
 
 class KRGUserExtension extends Extension
 {
+    const SPONSOR_PARAM = 'sp';
+
     /** @var ContainerBuilder */
     private $container;
 

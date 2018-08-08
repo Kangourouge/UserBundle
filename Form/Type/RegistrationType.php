@@ -28,6 +28,10 @@ class RegistrationType extends AbstractType
                 'invalid_message' => 'form.user.error.password',
                 'required'        => true,
             ])
+            ->add('godfatherCode', TextType::class, [
+                'mapped' => false,
+                'data'   => $options['godfather_code']
+            ])
             ->add('terms', CheckboxType::class, [
                 'constraints' => new IsTrue(),
             ]);
@@ -38,8 +42,11 @@ class RegistrationType extends AbstractType
         $resolver->setDefaults([
             'data_class'         => UserInterface::class,
             'translation_domain' => 'KRGUserBundle',
-            'label_format'       => 'form.user.%name%'
+            'label_format'       => 'form.user.%name%',
+            'godfather_code'     => null,
         ]);
+
+        $resolver->addAllowedTypes('godfather_code', ['string', 'null']);
     }
 
     public function getBlockPrefix()

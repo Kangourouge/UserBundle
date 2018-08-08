@@ -35,4 +35,6 @@ interface UserManagerInterface
     public function findUserByCancelAlterationToken($token);
 
     public function updatePassword(UserInterface $user);
+
+    public function createGodfatherRelation(UserInterface $user, string $sponsorCode);
 }

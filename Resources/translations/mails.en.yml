@@ -1,5 +1,5 @@
 registration:
-    subject: Address email confirmation
+    subject: 'Address email confirmation'
     message: |
         Hello %name%,
         To finish activating your account - please visit <a href="%url%">%url%</a>
@@ -8,7 +8,7 @@ registration:
         the Team.
 
 invitation:
-    subject: Invitation
+    subject: 'Invitation to join us'
     message: |
         Hello %name%,
         You have been invited - please visit <a href="%url%">%url%</a>
@@ -16,9 +16,17 @@ invitation:
         the Team.
 
 reset_password:
-    subject: Reset your password
+    subject: 'Reset your password'
     message: |
         Hello %name%,
         To reset your password - please visit <a href="%url%">%url%</a>
+        Regards,
+        the Team.
+
+sponsoring:
+    subject: '%firstname% %lastname% invite you to join us'
+    message: |
+        Hello,
+        You have been invited by %firstname% %lastname% - please visit <a href="%url%">%url%</a>
         Regards,
         the Team.

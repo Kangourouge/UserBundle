@@ -4,6 +4,7 @@ namespace KRG\UserBundle\Controller;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use KRG\MessageBundle\Service\Factory\MessageFactory;
+use KRG\UserBundle\DependencyInjection\KRGUserExtension;
 use KRG\UserBundle\Entity\UserInterface;
 use KRG\UserBundle\Form\Type\RegistrationType;
 use KRG\UserBundle\Manager\LoginManagerInterface;
@@ -80,22 +81,37 @@ class RegistrationController extends AbstractController
     {
         $this->loginManager->disconnectIfLogged();
         $user = $this->userManager->createUser();
-        $user->setEnabled(true);
+
+        if ($request->query->has('email')) {
+            $user->setEmail($request->query->get('email'));
+        }
 
         $form = $this
-            ->createForm(RegistrationType::class, null, [
-                'action' => $this->generateUrl('krg_user_registration_register')
+            ->createForm(RegistrationType::class, $user, [
+                'action'         => $this->generateUrl('krg_user_registration_register'),
+                'godfather_code' => $request->query->get(KRGUserExtension::SPONSOR_PARAM),
             ])
-            ->setData($user)
             ->add('submit', SubmitType::class, ['label' => 'form.submit_registration']);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
+                /** @var $user UserInterface */
                 $user = $form->getData();
+
+                // Sponsoring
+                $godfatherCode = $form->get('godfatherCode')->getData();
+                if ($godfatherCode) {
+                    $this->userManager->createGodfatherRelation($user, $godfatherCode);
+                }
 
                 $this->userManager->createConfirmationToken($user);
                 $this->userManager->updateUser($user, true);
+
+                // Godfather – Godson
+                if ($request->query->has(KRGUserExtension::SPONSOR_PARAM)) {
+                    $user = $this->userManager->createGodfatherRelation($user, $request->query->get(KRGUserExtension::SPONSOR_PARAM));
+                }
 
                 $this->messageFactory->create(RegistrationCheckEmailMessage::class, ['user' => $user])->send();
 
