@@ -26,7 +26,7 @@ class Sponsor implements SponsorInterface
     protected $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="KRG\UserBundle\Entity\UserInterface")
+     * @ORM\ManyToOne(targetEntity="KRG\UserBundle\Entity\UserInterface", inversedBy="sponsors")
      * @ORM\JoinColumn(name="godfather_id", referencedColumnName="id")
      */
     protected $godfather;
