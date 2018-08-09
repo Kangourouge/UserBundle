@@ -2,6 +2,7 @@
 
 namespace KRG\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -20,7 +21,6 @@ class User implements UserInterface, \Serializable
 {
     use TimestampableEntity;
     use SoftDeleteableEntity;
-    use SponsorTrait;
 
     /**
      * @ORM\Id
@@ -131,11 +131,22 @@ class User implements UserInterface, \Serializable
      */
     protected $roles;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $sponsorCode;
+
+    /**
+     * @ORM\OneToMany(targetEntity="KRG\UserBundle\Entity\SponsorInterface", mappedBy="godfather", cascade={"all"})
+     */
+    protected $sponsors;
+
     public function __construct()
     {
         $this->enabled = false;
         $this->terms = false;
         $this->roles = [];
+        $this->sponsors = new ArrayCollection();
     }
 
     public function __toString()
@@ -707,4 +718,54 @@ class User implements UserInterface, \Serializable
     {
         return $this->terms;
     }
+
+    /**
+     * @return string
+     */
+    public function getSponsorCode()
+    {
+        return $this->sponsorCode;
+    }
+
+    /**
+     * @param string $sponsorCode
+     */
+    public function setSponsorCode($sponsorCode)
+    {
+        $this->sponsorCode = $sponsorCode;
+    }
+
+    /**
+     * Add sponsor
+     *
+     * @param SponsorInterface $sponsor
+     * @return User
+     */
+    public function addSponsor(SponsorInterface $sponsor)
+    {
+        $this->sponsors[] = $sponsor;
+
+        return $this;
+    }
+
+    /**
+     * Remove sponsor
+     *
+     * @param SponsorInterface $sponsor
+     */
+    public function removeSponsor(SponsorInterface $sponsor)
+    {
+        $this->sponsors->removeElement($sponsor);
+    }
+
+    /**
+     * Get sponsors
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSponsors()
+    {
+        return $this->sponsors;
+    }
+
 }

@@ -66,3 +66,7 @@ email_alteration:
     success: 'Votre adresse e-mail a bien été mise à jour'
     cancel: 'Votre adresse e-mail a bien été restaurée'
   help: 'Une fois votre adresse e-mail modifiée, un mail de confirmation vous sera envoyé sur votre nouvelle adresse et vous serez déconnecté.'
+
+sponsor:
+  registered: 'Inscrit'
+  invitation_sent: 'Invitation envoyée le %date%'

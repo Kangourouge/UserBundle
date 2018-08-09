@@ -64,3 +64,8 @@ email_alteration:
     success: 'Your email address has been updated.'
     cancel: 'Your email address has been restored.'
   help: 'After your update, a confirmation email with an activation link will be sent and you will be logged out.'
+
+
+sponsor:
+  registered: 'Registered'
+  invitation_sent: 'Invitation was sent on %date%'

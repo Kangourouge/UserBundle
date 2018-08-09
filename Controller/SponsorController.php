@@ -2,30 +2,27 @@
 
 namespace KRG\UserBundle\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
-use KRG\MessageBundle\Service\Factory\MessageFactory;
-use KRG\UserBundle\DependencyInjection\KRGUserExtension;
-use KRG\UserBundle\Entity\UserInterface;
-use KRG\UserBundle\Form\Type\SponsoringType;
+use KRG\UserBundle\Entity\SponsorInterface;
 use KRG\UserBundle\Manager\UserManager;
-use KRG\UserBundle\Message\SponsoringMessage;
-use KRG\UserBundle\Util\UserManipulator;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use KRG\UserBundle\Form\Type\SponsoringType;
+use KRG\UserBundle\Manager\UserManagerInterface;
+use KRG\UserBundle\Manager\SponsorManagerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/user/sponsor", name="krg_user_sponsor_")
  */
 class SponsorController extends AbstractController
 {
-    /** @var MessageFactory */
-    protected $messageFactory;
+    /** @var SponsorManagerInterface */
+    protected $sponsorManager;
 
-    /** @var UserManager */
+    /** @var UserManagerInterface */
     protected $userManager;
 
     /** @var EntityManagerInterface */
@@ -35,13 +32,12 @@ class SponsorController extends AbstractController
     protected $translator;
 
     public function __construct(
-        MessageFactory $messageFactory,
+        SponsorManagerInterface $sponsorManager,
         UserManager $userManager,
         EntityManagerInterface $entityManager,
         TranslatorInterface $translator
-    )
-    {
-        $this->messageFactory = $messageFactory;
+    ) {
+        $this->sponsorManager = $sponsorManager;
         $this->userManager = $userManager;
         $this->entityManager = $entityManager;
         $this->translator = $translator;
@@ -53,43 +49,30 @@ class SponsorController extends AbstractController
     public function indexAction(Request $request)
     {
         $user = $this->getUser();
-        $form = $this
-            ->createForm(SponsoringType::class, null,
-                ['action' => $this->generateUrl('krg_user_sponsor_index')]
-            )
+        $form = $this->createForm(SponsoringType::class, null, [
+                'action' => $this->generateUrl('krg_user_sponsor_index')
+            ])
             ->add('submit', SubmitType::class, ['label' => 'form.submit_sponsoring']);
 
-        // Add sponsor code if it does not exists
-        $this->userManager->addSponsorCode($user);
-
-        // Registration url with sponsor code
-        $url = sprintf('%s?%s=%s',
-            $this->generateUrl('krg_user_registration_register', [], UrlGeneratorInterface::ABSOLUTE_URL),
-            KRGUserExtension::SPONSOR_PARAM,
-            $user->getSponsorCode()
-        );
+        $this->sponsorManager->addSponsorCode($user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-
-            // Send mail to each user
             foreach ($data['emails'] as $email) {
                 if (strlen($email) > 0) {
-                    if (false === $user->hasPendingGodson($email)) {
-                        if (null === $this->entityManager->getRepository(UserInterface::class)->findOneBy(['email' => $email])) {
-                            $this->messageFactory->create(SponsoringMessage::class, [
-                                'user' => $user,
-                                'url'  => sprintf('%s&email=%s', $url, $email),
-                            ])->send();
-                        }
+                    $sponsor = $this->sponsorManager->createSponsor($email, $user);
 
-                        $user->addPendingGodson($email);
+                    if ($sponsor) {
+                        $this->entityManager->persist($sponsor);
+                        $this->sponsorManager->sendInvitation($user, $sponsor);
                     }
                 }
             }
 
-            $this->userManager->updateUser($user, true);
+            $this->userManager->updateUser($user);
+            $this->entityManager->flush();
+
             $this->addFlash('success', $this->translator->trans('sponsor.flash.success', [], 'KRGUserBundle'));
 
             return $this->redirectToRoute('krg_user_show');
@@ -97,7 +80,7 @@ class SponsorController extends AbstractController
 
         return $this->render('@KRGUser/sponsor/index.html.twig', [
             'form' => $form->createView(),
-            'url'  => $url
+            'url'  => $this->sponsorManager->getInvitationUrl($user),
         ]);
     }
 }

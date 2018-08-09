@@ -35,10 +35,4 @@ interface UserManagerInterface
     public function findUserByCancelAlterationToken($token);
 
     public function updatePassword(UserInterface $user);
-
-    public function addSponsorCode(UserInterface $user);
-
-    static public function generateSponsorCode(int $length = 8);
-
-    public function createGodfatherRelation(UserInterface $user, string $sponsorCode);
 }

@@ -4,11 +4,11 @@
 {% block content %}
     {{ form(form) }}
 
-    {% set pendingGodsons = app.user.pendingGodsons %}
-    {% if pendingGodsons|length %}
+    {% set sponsors = app.user.sponsors %}
+    {% if sponsors|length %}
         <ul>
-            {% for email in app.user.pendingGodsons %}
-                <li>{{ email }}</li>
+            {% for sponsor in app.user.sponsors %}
+                <li>{{ sponsor.email }} — {% if sponsor.godson is null %}{{ 'sponsor.invitation_sent'|trans({'%date%': sponsor.createdAt|date('d/m/Y')}, 'KRGUserBundle') }}{% else %}{{ 'sponsor.registered'|trans({}, 'KRGUserBundle') }}{% endif %}</li>
             {% endfor %}
         </ul>
     {% endif %}

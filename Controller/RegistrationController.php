@@ -4,10 +4,11 @@ namespace KRG\UserBundle\Controller;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use KRG\MessageBundle\Service\Factory\MessageFactory;
-use KRG\UserBundle\DependencyInjection\KRGUserExtension;
 use KRG\UserBundle\Entity\UserInterface;
 use KRG\UserBundle\Form\Type\RegistrationType;
 use KRG\UserBundle\Manager\LoginManagerInterface;
+use KRG\UserBundle\Manager\SponsorManager;
+use KRG\UserBundle\Manager\SponsorManagerInterface;
 use KRG\UserBundle\Manager\UserManagerInterface;
 use KRG\UserBundle\Message\RegistrationCheckEmailMessage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,6 +39,9 @@ class RegistrationController extends AbstractController
     /** @var UserManagerInterface */
     protected $userManager;
 
+    /** @var SponsorManagerInterface */
+    protected $sponsorManager;
+
     /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
@@ -59,19 +63,21 @@ class RegistrationController extends AbstractController
     public function __construct(
         LoginManagerInterface $loginManager,
         UserManagerInterface $userManager,
+        SponsorManagerInterface $sponsorManager,
         EventDispatcherInterface $eventDispatcher,
-        TokenStorageInterface $tokenStorage,
-        SessionInterface $session,
         MessageFactory $messageFactory,
-        TranslatorInterface $translator)
-    {
+        TranslatorInterface $translator,
+        TokenStorageInterface $tokenStorage,
+        SessionInterface $session
+    ) {
         $this->loginManager = $loginManager;
         $this->userManager = $userManager;
+        $this->sponsorManager = $sponsorManager;
+        $this->eventDispatcher = $eventDispatcher;
         $this->messageFactory = $messageFactory;
-        $this->tokenStorage = $tokenStorage;
-        $this->dispatcher = $eventDispatcher;
-        $this->session = $session;
         $this->translator = $translator;
+        $this->tokenStorage = $tokenStorage;
+        $this->session = $session;
     }
 
     /**
@@ -89,7 +95,7 @@ class RegistrationController extends AbstractController
         $form = $this
             ->createForm(RegistrationType::class, $user, [
                 'action'         => $this->generateUrl('krg_user_registration_register'),
-                'godfather_code' => $request->query->get(KRGUserExtension::SPONSOR_PARAM),
+                'godfather_code' => $request->query->get(SponsorManager::SPONSOR_PARAM),
             ])
             ->add('submit', SubmitType::class, ['label' => 'form.submit_registration']);
 
@@ -99,19 +105,10 @@ class RegistrationController extends AbstractController
                 /** @var $user UserInterface */
                 $user = $form->getData();
 
-                // Sponsoring
-                $godfatherCode = $form->get('godfatherCode')->getData();
-                if ($godfatherCode) {
-                    $this->userManager->createGodfatherRelation($user, $godfatherCode);
-                }
+                $this->sponsorManager->createGodfatherRelation($user, $form->get('godfatherCode')->getData());
 
                 $this->userManager->createConfirmationToken($user);
                 $this->userManager->updateUser($user, true);
-
-                // Godfather – Godson
-                if ($request->query->has(KRGUserExtension::SPONSOR_PARAM)) {
-                    $user = $this->userManager->createGodfatherRelation($user, $request->query->get(KRGUserExtension::SPONSOR_PARAM));
-                }
 
                 $this->messageFactory->create(RegistrationCheckEmailMessage::class, ['user' => $user])->send();
 
@@ -121,7 +118,6 @@ class RegistrationController extends AbstractController
             } catch (UniqueConstraintViolationException $exception) {
                 $form->addError(new FormError($this->translator->trans('registration.email_exists', [], 'KRGUserBundle')));
             } catch (\Exception $exception) {
-                dump($exception);
                 $form->addError(new FormError('Unknown Error'));
             }
         }
