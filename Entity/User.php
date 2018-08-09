@@ -20,7 +20,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User implements UserInterface, \Serializable
 {
     use TimestampableEntity;
-    use SoftDeleteableEntity;
 
     /**
      * @ORM\Id
