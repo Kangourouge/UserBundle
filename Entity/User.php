@@ -15,7 +15,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\MappedSuperclass(repositoryClass="KRG\UserBundle\Repository\UserRepository")
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class User implements UserInterface, \Serializable
 {
