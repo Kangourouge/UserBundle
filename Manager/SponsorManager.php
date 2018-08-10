@@ -96,7 +96,7 @@ class SponsorManager implements SponsorManagerInterface
         $code = null;
         while (1) {
             $code = self::generateSponsorCode();
-            $exists = $this->findUserBy(['sponsorCode' => $code]);
+            $exists = $this->userManager->findUserBy(['sponsorCode' => $code]);
 
             if (null === $exists) {
                 break;
