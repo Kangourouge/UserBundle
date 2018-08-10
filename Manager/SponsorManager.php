@@ -107,9 +107,9 @@ class SponsorManager implements SponsorManagerInterface
         $this->userManager->updateUser($user, true);
     }
 
-    public function createGodfatherRelation(UserInterface $user, string $sponsorCode)
+    public function createGodfatherRelation(UserInterface $user, string $sponsorCode = null)
     {
-        if (strlen($sponsorCode) === 0) {
+        if ($sponsorCode || strlen($sponsorCode) === 0) {
             return null;
         }
 
