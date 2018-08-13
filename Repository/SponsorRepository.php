@@ -6,18 +6,16 @@ use Doctrine\ORM\EntityRepository;
 
 class SponsorRepository extends EntityRepository
 {
-    public function findBySponsorCodeAndEmail(string $sponsorCode, string $email)
+    public function findBySponsorCodeAndEmail(string $sponsorCode)
     {
         return $this
             ->createQueryBuilder('sponsor')
             ->join('sponsor.godfather', 'user')
-            ->where('sponsor.email = :email')
-            ->andWhere('user.sponsorCode = :sponsorCode')
+            ->where('user.sponsorCode = :sponsorCode')
             ->setParameters([
-                'email'       => $email,
                 'sponsorCode' => $sponsorCode,
             ])
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
 }

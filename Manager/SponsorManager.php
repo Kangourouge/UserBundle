@@ -48,12 +48,14 @@ class SponsorManager implements SponsorManagerInterface
         return $this->entityManager->getRepository($this->getClass());
     }
 
-    public function createSponsor(string $email, UserInterface $godfather)
+    public function createSponsorWithEmail(UserInterface $godfather, string $email = null)
     {
+        // Can not create a sponsor with an existing user email
         if (null !== $this->userManager->findUserByEmail($email)) {
             return null;
         }
 
+        // Check if the godfather have not already invited this email
         if (false === $godfather->getSponsors()->filter(function(SponsorInterface $sponsor) use ($email) {
             return $sponsor->getEmail() === $email;
         })->isEmpty()) {
@@ -107,19 +109,35 @@ class SponsorManager implements SponsorManagerInterface
         $this->userManager->updateUser($user, true);
     }
 
-    public function createGodfatherRelation(UserInterface $user, string $sponsorCode = null)
+    public function createGodfatherRelation(UserInterface $user, string $sponsorCode)
     {
-        if ($sponsorCode || strlen($sponsorCode) === 0) {
+        if (strlen($sponsorCode) === 0) {
             return null;
         }
 
-        $sponsors = $this->entityManager->getRepository(SponsorInterface::class)
-                                        ->findBySponsorCodeAndEmail($sponsorCode, $user->getEmail());
+        $godfather = $this->entityManager->getRepository(UserInterface::class)->findOneBy(['sponsorCode' => $sponsorCode]);
+        if (null === $godfather) {
+            return null;
+        }
 
         /** @var $sponsor SponsorInterface */
-        foreach ($sponsors as $sponsor) {
-            $sponsor->setGodson($user);
+        foreach ($godfather->getSponsors() as $sponsor) {
+            // Update Godfather Sponsors with registered godson
+            if ($sponsor->getEmail() === $user->getEmail()) {
+                $sponsor->setGodson($user);
+
+                return $user;
+            }
         }
+
+        // In case the Sponsor Code is used without invitation
+        $class = $this->getClass();
+        $sponsor = new $class();
+        $sponsor
+            ->setGodfather($godfather)
+            ->setGodson($user);
+
+        $this->entityManager->persist($sponsor);
 
         return $user;
     }

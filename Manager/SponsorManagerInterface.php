@@ -11,7 +11,7 @@ interface SponsorManagerInterface
 
     public function getRepository();
 
-    public function createSponsor(string $email, UserInterface $godfather);
+    public function createSponsorWithEmail(UserInterface $godfather, string $email = null);
 
     public function getInvitationUrl(UserInterface $godfather);
 

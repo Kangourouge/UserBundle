@@ -8,7 +8,7 @@
     {% if sponsors|length %}
         <ul>
             {% for sponsor in app.user.sponsors %}
-                <li>{{ sponsor.email }} — {% if sponsor.godson is null %}{{ 'sponsor.invitation_sent'|trans({'%date%': sponsor.createdAt|date('d/m/Y')}, 'KRGUserBundle') }}{% else %}{{ 'sponsor.registered'|trans({}, 'KRGUserBundle') }}{% endif %}</li>
+                <li>{{ sponsor }} — {% if sponsor.godson is null %}{{ 'sponsor.invitation_sent'|trans({'%date%': sponsor.createdAt|date('d/m/Y')}, 'KRGUserBundle') }}{% else %}{{ 'sponsor.registered'|trans({}, 'KRGUserBundle') }}{% endif %}</li>
             {% endfor %}
         </ul>
     {% endif %}

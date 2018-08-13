@@ -21,7 +21,7 @@ class Sponsor implements SponsorInterface
     protected $id;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $email;
 
@@ -36,6 +36,11 @@ class Sponsor implements SponsorInterface
      * @ORM\JoinColumn(name="godson_id", referencedColumnName="id", nullable=true)
      */
     protected $godson;
+
+    public function __toString()
+    {
+        return null !== $this->getGodson() ? $this->getGodson()->getEmail() : $this->getEmail();
+    }
 
     /**
      * Get id

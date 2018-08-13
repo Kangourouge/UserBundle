@@ -105,7 +105,9 @@ class RegistrationController extends AbstractController
                 /** @var $user UserInterface */
                 $user = $form->getData();
 
-                $this->sponsorManager->createGodfatherRelation($user, $form->get('godfatherCode')->getData());
+                if ($godfatherCode = $form->get('godfatherCode')->getData()) {
+                    $this->sponsorManager->createGodfatherRelation($user, $godfatherCode);
+                }
 
                 $this->userManager->createConfirmationToken($user);
                 $this->userManager->updateUser($user, true);

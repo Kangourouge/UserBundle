@@ -61,7 +61,7 @@ class SponsorController extends AbstractController
             $data = $form->getData();
             foreach ($data['emails'] as $email) {
                 if (strlen($email) > 0) {
-                    $sponsor = $this->sponsorManager->createSponsor($email, $user);
+                    $sponsor = $this->sponsorManager->createSponsorWithEmail($user, $email);
 
                     if ($sponsor) {
                         $this->entityManager->persist($sponsor);
