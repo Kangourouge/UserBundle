@@ -130,8 +130,13 @@ class UserController extends AbstractController
     {
         $user = $this->getUser();
         $form = $this
-            ->createForm(ConfirmType::class)
-            ->add('submit', SubmitType::class);
+            ->createFormBuilder(null, [
+                'translation_domain' => 'KRGUserBundle'
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'user_delete.submit'
+            ])
+            ->getForm();
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
