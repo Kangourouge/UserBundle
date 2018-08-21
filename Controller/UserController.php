@@ -3,6 +3,7 @@
 namespace KRG\UserBundle\Controller;
 
 use KRG\UserBundle\Entity\UserInterface;
+use KRG\UserBundle\Form\Type\ConfirmType;
 use KRG\UserBundle\Form\Type\ProfileType;
 use KRG\UserBundle\Manager\UserManagerInterface;
 use KRG\UserBundle\Form\Type\ChangePasswordType;
@@ -120,14 +121,24 @@ class UserController extends AbstractController
     /**
      * @Route("/profile/delete", name="krg_user_delete")
      */
-    public function deleteAction()
+    public function deleteAction(Request $request)
     {
         $user = $this->getUser();
+        $form = $this
+            ->createForm(ConfirmType::class)
+            ->add('submit', SubmitType::class);
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($user);
-        $entityManager->flush();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($user);
+            $entityManager->flush();
 
-        return $this->redirectToRoute('krg_user_login');
+            return $this->redirectToRoute('krg_user_login');
+        }
+
+        return $this->render('@KRGUser/user/delete.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 }
