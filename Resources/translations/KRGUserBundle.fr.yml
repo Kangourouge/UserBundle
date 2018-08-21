@@ -18,6 +18,7 @@ form:
     submit_change_email: 'Mettre à jour mon adresse email'
     _password: 'Mot de passe'
     _username: 'Adresse email'
+    confirm_delete: 'Confirmer la suppression'
 
 security:
   login:

@@ -18,6 +18,7 @@ form:
     submit_change_email: 'Change the email'
     _password: 'Password'
     _username: 'E-mail address'
+    confirm_delete: 'Confirm deletion'
 
 security:
   login:
