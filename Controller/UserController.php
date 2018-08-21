@@ -10,6 +10,7 @@ use KRG\UserBundle\Form\Type\ChangePasswordType;
 use KRG\UserBundle\Manager\LoginManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
@@ -26,10 +27,14 @@ class UserController extends AbstractController
     /** @var TranslatorInterface */
     protected $translator;
 
-    public function __construct(UserManagerInterface $userManager, TranslatorInterface $translator)
+    /** @var TokenStorageInterface */
+    protected $tokenStorage;
+
+    public function __construct(UserManagerInterface $userManager, TranslatorInterface $translator, TokenStorageInterface $tokenStorage)
     {
         $this->userManager = $userManager;
         $this->translator = $translator;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -133,6 +138,11 @@ class UserController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($user);
             $entityManager->flush();
+
+            $this->tokenStorage->setToken(null);
+            $request->getSession()->invalidate();
+
+            $this->addFlash('success', $this->translator->trans('user_delete.success', [], 'KRGUserBundle'));
 
             return $this->redirectToRoute('krg_user_login');
         }
