@@ -78,7 +78,7 @@ class LoginManager implements LoginManagerInterface
 
     final public function disconnectIfLogged()
     {
-        if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+        if ($this->tokenStorage->getToken() && $this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $this->logOutCurrentUser();
         }
     }
