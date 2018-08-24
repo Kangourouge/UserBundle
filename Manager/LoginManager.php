@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Http\RememberMe\RememberMeServicesInterface;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface;
@@ -78,8 +79,11 @@ class LoginManager implements LoginManagerInterface
 
     final public function disconnectIfLogged()
     {
-        if ($this->tokenStorage->getToken() && $this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            $this->logOutCurrentUser();
+        try {
+            if ($this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+                $this->logOutCurrentUser();
+            }
+        } catch (AuthenticationCredentialsNotFoundException $exception) {
         }
     }
 
