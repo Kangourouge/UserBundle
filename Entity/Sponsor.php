@@ -7,7 +7,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * @ORM\Entity(repositoryClass="KRG\UserBundle\Repository\SponsorRepository")
- * @ORM\Table
+ * @ORM\Table(name="user_sponsor")
  */
 class Sponsor implements SponsorInterface
 {
