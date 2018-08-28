@@ -75,7 +75,7 @@ class SponsorController extends AbstractController
 
             $this->addFlash('success', $this->translator->trans('sponsor.flash.success', [], 'KRGUserBundle'));
 
-            return $this->redirectToRoute('krg_user_show');
+            return $this->redirectToRoute($request->attributes->get('_route'));
         }
 
         return $this->render('@KRGUser/sponsor/index.html.twig', [

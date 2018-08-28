@@ -30,8 +30,9 @@ class SponsoringMessage extends AbstractMailMessage
     {
         parent::configureOptions($resolver);
 
-        $resolver->setRequired(['user', 'url']);
+        $resolver->setRequired(['user', 'url', 'to']);
         $resolver->setAllowedTypes('user', UserInterface::class);
         $resolver->setAllowedTypes('url', 'string');
+        $resolver->setAllowedTypes('to', 'string');
     }
 }
