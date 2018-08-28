@@ -3,6 +3,7 @@
 namespace KRG\UserBundle\Controller;
 
 use KRG\MessageBundle\Event\MessageDecorator;
+use KRG\MessageBundle\Service\Factory\MessageFactory;
 use KRG\UserBundle\Form\Type\ResetRequestType;
 use KRG\UserBundle\Manager\LoginManagerInterface;
 use KRG\UserBundle\Manager\UserManagerInterface;
@@ -34,6 +35,9 @@ class ResetController extends AbstractController
     /** @var TranslatorInterface */
     protected $translator;
 
+    /** @var MessageFactory */
+    protected $messageFactory;
+
     /** @var FormFactoryInterface */
     protected $formFactory;
 
@@ -42,12 +46,14 @@ class ResetController extends AbstractController
         UserManagerInterface $userManager,
         EventDispatcherInterface $eventDispatcher,
         TranslatorInterface $translator,
+        MessageFactory $messageFactory,
         FormFactoryInterface $formFactory)
     {
         $this->loginManager = $loginManager;
         $this->userManager = $userManager;
         $this->dispatcher = $eventDispatcher;
         $this->translator = $translator;
+        $this->messageFactory = $messageFactory;
         $this->formFactory = $formFactory;
     }
 

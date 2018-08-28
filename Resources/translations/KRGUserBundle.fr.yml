@@ -19,6 +19,8 @@ form:
     _password: 'Mot de passe'
     _username: 'Adresse email'
     confirm_delete: 'Confirmer la suppression'
+  submit_reset_password: 'Mettre à jour mon mot de passe'
+
 
 security:
   login:
