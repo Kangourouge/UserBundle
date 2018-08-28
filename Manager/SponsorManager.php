@@ -85,6 +85,7 @@ class SponsorManager implements SponsorManagerInterface
     {
         return $this->messageFactory->create(SponsoringMessage::class, [
             'user' => $godfather,
+            'to'   => $sponsor->getEmail(),
             'url'  => sprintf('%s&email=%s', $this->getInvitationUrl($godfather), $sponsor->getEmail()),
         ])->send();
     }

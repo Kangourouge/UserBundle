@@ -10,7 +10,7 @@ class SponsoringMessage extends AbstractMailMessage
 {
 	public function getTo()
 	{
-		return $this->getOption('user')->getEmail();
+		return $this->getOption('to');
 	}
 
 	public function getSubject()
