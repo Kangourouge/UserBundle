@@ -20,7 +20,7 @@ form:
     _username: 'Adresse email'
     confirm_delete: 'Confirmer la suppression'
   submit_reset_password: 'Mettre à jour mon mot de passe'
-
+  submit_request_password: 'Réinitialiser'
 
 security:
   login:
@@ -43,13 +43,18 @@ resetting:
   request:
     check_email: "Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour réinitialiser votre mot de passe.\n\nSi vous ne recevez pas un email, vérifiez votre dossier spam ou essayez à nouveau.\n"
     username: 'Adresse email'
-    submit: 'Réinitialiser le mot de passe'
+    submit: 'Réinitialiser'
+    help: 'Réinitialiser son mot de passe'
+  reset:
+    help: 'Créer un nouveau mot de passe'
 
 change_password:
   submit: 'Modifier le mot de passe'
   flash:
     success: 'Le mot de passe a été modifié.'
   help: 'Modifier le mot de passe'
+
+
 
 registration:
   check_email: 'Un e-mail a été envoyé à l''adresse %email%. Il contient un lien d''activation sur lequel il vous faudra cliquer afin d''activer votre compte.'

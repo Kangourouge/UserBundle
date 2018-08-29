@@ -68,7 +68,9 @@ class ResetController extends AbstractController
             ->createNamed(null, ResetRequestType::class, null, [
                 'action' => $this->generateUrl('krg_user_reset_request_send')
             ])
-            ->add('submit', SubmitType::class, ['label' => 'resetting.request.submit']);
+            ->add('submit', SubmitType::class,
+                ['label' => 'form.submit_request_password']
+            );
 
         return $this->render('@KRGUser/reset/request.html.twig', [
             'form' => $form->createView()
@@ -112,7 +114,9 @@ class ResetController extends AbstractController
         $form = $this
             ->createForm(ResetType::class)
             ->setData($user)
-            ->add('submit', SubmitType::class, ['label' => 'form.submit_reset_password']);
+            ->add('submit', SubmitType::class,
+                ['label' => 'form.submit_reset_password']
+            );
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -121,7 +125,7 @@ class ResetController extends AbstractController
             $this->userManager->processConfirmation($user);
             $this->userManager->updateUser($user, true);
 
-            $this->addFlash('notice', $this->translator->trans('change_password.flash.success', [], 'KRGUserBundle'));
+            $this->addFlash('success', $this->translator->trans('change_password.flash.success', [], 'KRGUserBundle'));
 
             return $this->redirectToRoute('krg_user_login');
         }

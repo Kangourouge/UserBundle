@@ -1,6 +1,8 @@
 {% extends '@KRGUser/layout.html.twig' %}
 {% trans_default_domain 'KRGUserBundle' %}
 
-{% block content %}
+{% block container %}
+    <p>{{ 'resetting.reset.help'|trans }}</p>
+
     {{ form(form) }}
 {% endblock %}
