@@ -2,3 +2,6 @@ form:
   user:
     password:
       mismatch: 'The entered passwords don''t match.'
+
+registration:
+  wrong_token: 'Token expired, please use the login form'

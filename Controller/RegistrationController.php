@@ -158,20 +158,21 @@ class RegistrationController extends AbstractController
      */
     public function confirmAction(Request $request, $token)
     {
+        $response = $this->redirect('/');
         $user = $this->userManager->findUserByConfirmationToken($token);
-        if (null === $user) {
-            throw new NotFoundHttpException(sprintf('The user with confirmation token "%s" does not exist', $token));
-        }
 
-        $user->setConfirmationToken(null);
-        $user->setEnabled(true);
-        $this->userManager->updateUser($user, true);
+        if ($user) {
+            $user->setConfirmationToken(null);
+            $user->setEnabled(true);
+            $this->userManager->updateUser($user, true);
 
-        try {
-            $response = new RedirectResponse($this->generateUrl('krg_user_registration_confirmed'));
-            $this->loginManager->logInUser($user, $response);
-        } catch (AccountStatusException $ex) {
-            $response = $this->redirect('/');
+            try {
+                $response = new RedirectResponse($this->generateUrl('krg_user_registration_confirmed'));
+                $this->loginManager->logInUser($user, $response);
+            } catch (AccountStatusException $ex) {
+            }
+        } else {
+            $this->addFlash('danger', $this->translator->trans('registration.wrong_token', [], 'validators'));
         }
 
         return $response;
