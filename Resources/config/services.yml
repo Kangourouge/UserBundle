@@ -43,10 +43,6 @@ services:
         resource: '../../Security'
         public: true
 
-    KRG\UserBundle\OAuth\:
-        resource: '../../OAuth'
-        public: true
-
     KRG\UserBundle\Message\:
         resource: '../../Message'
         lazy: true
