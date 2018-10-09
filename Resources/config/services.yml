@@ -5,6 +5,7 @@ services:
         public: false
         bind:
             $firewallName: 'main'
+            $roles: '%security.role_hierarchy.roles%'
 
     KRG\UserBundle\Controller\:
         resource: '../../Controller'
