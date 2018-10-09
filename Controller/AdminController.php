@@ -27,4 +27,12 @@ class AdminController extends \EasyCorp\Bundle\EasyAdminBundle\Controller\AdminC
 
         return $this->redirect(sprintf('%s?entity=%s&action=%s', $this->generateUrl('easyadmin'), $easyadmin['entity']['name'], 'list'));
     }
+
+    protected function createNewEntity()
+    {
+        $user = parent::createNewEntity();
+        $user->setPlainPassword(sha1(rand()));
+
+        return $user;
+    }
 }

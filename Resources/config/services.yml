@@ -16,6 +16,10 @@ services:
         public: true
         tags: ['form.type']
 
+    KRG\UserBundle\Form\TypeGuesser\:
+        resource: '../../Form/TypeGuesser'
+        tags: ['form.type_guesser']
+
     KRG\UserBundle\EventSubscriber\:
         resource: '../../EventSubscriber'
         tags: ['kernel.event_subscriber']

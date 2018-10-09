@@ -1,11 +1,11 @@
 imports:
-    - { resource: easyadmin/ }
+  - { resource: easyadmin/ }
 
 easy_admin:
-    design:
-        menu:
-            -
-                label: 'Security'
-                priority: 1
-                children:
-                    - { entity: 'User', icon: 'users', label: 'Users' }
+  design:
+    menu:
+      -
+        label: 'Security'
+        priority: 1
+        children:
+            - { entity: 'User', icon: 'users', label: 'Users' }
