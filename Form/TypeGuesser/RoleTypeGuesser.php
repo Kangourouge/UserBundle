@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormTypeGuesserInterface;
 use Symfony\Component\Form\Guess\Guess;
 use Symfony\Component\Form\Guess\TypeGuess;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 
 class RoleTypeGuesser implements FormTypeGuesserInterface
 {
@@ -34,9 +35,14 @@ class RoleTypeGuesser implements FormTypeGuesserInterface
     public function guessType($class, $property)
     {
         if ($property === 'roles' && in_array(UserInterface::class, class_implements($class))) {
-            $choices = array_filter($this->roles, function($role){
-                return $this->authorizationChecker->isGranted($role);
-            });
+
+            try {
+                $choices = array_filter($this->roles, function($role){
+                    return $this->authorizationChecker->isGranted($role);
+                });
+            } catch (AuthenticationCredentialsNotFoundException $exception) {
+                $choices = [];
+            }
 
             $options = [
                 'multiple' => true,
@@ -46,7 +52,6 @@ class RoleTypeGuesser implements FormTypeGuesserInterface
             ];
             return new TypeGuess(ChoiceType::class, $options, Guess::VERY_HIGH_CONFIDENCE);
         }
-        // TODO: Implement guessType() method.
     }
 
     public function guessRequired($class, $property)
