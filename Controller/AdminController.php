@@ -2,10 +2,25 @@
 
 namespace KRG\UserBundle\Controller;
 
+use KRG\EasyAdminExtensionBundle\Filter\FilterListener;
+use KRG\MessageBundle\Service\Factory\MessageFactory;
+use KRG\UserBundle\Entity\UserInterface;
+use KRG\UserBundle\Message\InvitationMessage;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Form\FormFactoryInterface;
 
-class AdminController extends \EasyCorp\Bundle\EasyAdminBundle\Controller\AdminController
+class AdminController extends \KRG\EasyAdminExtensionBundle\Controller\AdminController
 {
+
+    /** @var MessageFactory */
+    protected $messageFactory;
+
+    public function __construct(FormFactoryInterface $formFactory, FilterListener $filterListener, MessageFactory $messageFactory)
+    {
+        parent::__construct($formFactory, $filterListener);
+        $this->messageFactory = $messageFactory;
+    }
+
     /**
      * @Route("/switch", name="krg_user_admin_switch")
      */
@@ -34,5 +49,38 @@ class AdminController extends \EasyCorp\Bundle\EasyAdminBundle\Controller\AdminC
         $user->setPlainPassword(sha1(rand()));
 
         return $user;
+    }
+
+    public function inviteAction()
+    {
+
+        $id = $this->request->query->get('id');
+        $easyadmin = $this->request->attributes->get('easyadmin');
+        $entity = $easyadmin['item'];
+
+        $this->invite($entity);
+
+        return $this->redirectToReferrer();
+    }
+
+    public function inviteSelectionAction(array $entities)
+    {
+        foreach ($entities as $entity) {
+            $this->invite($entity);
+        }
+
+        return $this->redirectToReferrer();
+    }
+
+    protected function invite(UserInterface $user)
+    {
+        $user->setPlainPassword(sha1(rand()));
+        $user->setInvitationToken(sha1(rand()));
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        $this->messageFactory->create(InvitationMessage::class, ['user' => $user])->send();
     }
 }
