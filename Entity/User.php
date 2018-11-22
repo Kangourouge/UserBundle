@@ -2,6 +2,7 @@
 
 namespace KRG\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -9,16 +10,15 @@ use KRG\UserBundle\Annotation\PrivateData;
 use KRG\UserBundle\Doctrine\DBAL\GenderEnum;
 use KRG\UserBundle\Util\Canonicalizer;
 use Gedmo\Mapping\Annotation as Gedmo;
+use KRG\UserBundle\Validator\Constraint\EmailUnique;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\MappedSuperclass(repositoryClass="KRG\UserBundle\Repository\UserRepository")
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class User implements UserInterface, \Serializable
 {
     use TimestampableEntity;
-    use SoftDeleteableEntity;
 
     /**
      * @ORM\Id
@@ -48,6 +48,17 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="string", unique=true)
      */
     protected $emailCanonical;
+
+    /**
+     * @EmailUnique()
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $emailAlteration;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $emailBackup;
 
     /**
      * @PrivateData(replaceWith="John")
@@ -103,6 +114,11 @@ class User implements UserInterface, \Serializable
     protected $invitationToken;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $cancelAlterationToken;
+
+    /**
      * @ORM\Column(type="boolean")
      * @var bool
      */
@@ -113,11 +129,22 @@ class User implements UserInterface, \Serializable
      */
     protected $roles;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $sponsorCode;
+
+    /**
+     * @ORM\OneToMany(targetEntity="KRG\UserBundle\Entity\SponsorInterface", mappedBy="godfather", cascade={"all"})
+     */
+    protected $sponsors;
+
     public function __construct()
     {
         $this->enabled = false;
         $this->terms = false;
         $this->roles = [];
+        $this->sponsors = new ArrayCollection();
     }
 
     public function __toString()
@@ -309,6 +336,54 @@ class User implements UserInterface, \Serializable
     }
 
     /**
+     * Get email alteration
+     *
+     * @return string
+     */
+    public function getEmailAlteration()
+    {
+        return $this->emailAlteration;
+    }
+
+    /**
+     * Set email alteration
+     *
+     * @param string $emailAlteration
+     *
+     * @return User
+     */
+    public function setEmailAlteration($emailAlteration)
+    {
+        $this->emailAlteration = $emailAlteration;
+
+        return $this;
+    }
+
+    /**
+     * Get email backup
+     *
+     * @return string
+     */
+    public function getEmailBackup()
+    {
+        return $this->emailBackup;
+    }
+
+    /**
+     * Set email backup
+     *
+     * @param string $emailBackup
+     *
+     * @return User
+     */
+    public function setEmailBackup($emailBackup)
+    {
+        $this->emailBackup = $emailBackup;
+
+        return $this;
+    }
+
+    /**
      * Set firstname
      *
      * @param string $firstname
@@ -492,6 +567,30 @@ class User implements UserInterface, \Serializable
     }
 
     /**
+     * Set alteration token
+     *
+     * @param string $cancelAlterationToken
+     *
+     * @return User
+     */
+    public function setCancelAlterationToken($cancelAlterationToken)
+    {
+        $this->cancelAlterationToken = $cancelAlterationToken;
+
+        return $this;
+    }
+
+    /**
+     * Get alteration token
+     *
+     * @return string
+     */
+    public function getCancelAlterationToken()
+    {
+        return $this->cancelAlterationToken;
+    }
+
+    /**
      * Add role
      *
      * @param $role
@@ -499,12 +598,20 @@ class User implements UserInterface, \Serializable
      */
     public function addRole($role)
     {
+        if (is_array($role)) {
+            foreach ($role as $_role) {
+                $this->addRole($_role);
+            }
+
+            return $this;
+        }
+
         $role = strtoupper($role);
         if ($role === static::ROLE_DEFAULT) {
             return $this;
         }
 
-        if (!in_array($role, $this->roles, true)) {
+        if (false === in_array($role, $this->roles, true)) {
             $this->roles[] = $role;
         }
 
@@ -565,6 +672,11 @@ class User implements UserInterface, \Serializable
         return in_array(strtoupper($role), $this->getRoles(), true);
     }
 
+    public function isAdmin()
+    {
+        return $this->hasRole(static::ROLE_ADMIN) || $this->hasRole(static::ROLE_SUPER_ADMIN);
+    }
+
     public function isSuperAdmin()
     {
         return $this->hasRole(static::ROLE_SUPER_ADMIN);
@@ -604,4 +716,54 @@ class User implements UserInterface, \Serializable
     {
         return $this->terms;
     }
+
+    /**
+     * @return string
+     */
+    public function getSponsorCode()
+    {
+        return $this->sponsorCode;
+    }
+
+    /**
+     * @param string $sponsorCode
+     */
+    public function setSponsorCode($sponsorCode)
+    {
+        $this->sponsorCode = $sponsorCode;
+    }
+
+    /**
+     * Add sponsor
+     *
+     * @param SponsorInterface $sponsor
+     * @return User
+     */
+    public function addSponsor(SponsorInterface $sponsor)
+    {
+        $this->sponsors[] = $sponsor;
+
+        return $this;
+    }
+
+    /**
+     * Remove sponsor
+     *
+     * @param SponsorInterface $sponsor
+     */
+    public function removeSponsor(SponsorInterface $sponsor)
+    {
+        $this->sponsors->removeElement($sponsor);
+    }
+
+    /**
+     * Get sponsors
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSponsors()
+    {
+        return $this->sponsors;
+    }
+
 }

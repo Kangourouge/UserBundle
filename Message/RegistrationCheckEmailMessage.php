@@ -10,12 +10,17 @@ class RegistrationCheckEmailMessage extends AbstractMailMessage
 {
     public function getTo()
     {
-        return $this->user->getEmail();
+        return $this->getOption('user')->getEmail();
     }
 
     public function getSubject()
     {
-        return $this->translator->trans('mail.subject.registration_check', ['user' => $this->user], 'mails');
+        return $this->translator->trans('registration.subject', ['user' => $this->getOption('user')], 'mails');
+    }
+
+    protected function getTemplate()
+    {
+        return '@KRGUser/message/registration_check_email.html.twig';
     }
 
     public function configureOptions(OptionsResolver $resolver)

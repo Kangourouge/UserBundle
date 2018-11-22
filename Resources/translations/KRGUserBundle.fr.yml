@@ -1,18 +1,26 @@
 form:
-  email: 'Adresse email'
-  firstname: Prénom
-  lastname: Nom
-  password: 'Mot de passe'
-  new_password: 'Nouveau mot de passe'
-  new_password_confirmation: 'Confirmer le nouveau mot de passe'
-  password_confirmation: 'Confirmation mot de passe'
-  current_password: 'Mot de passe actuel'
-  terms: 'J''accepte les conditions générales d''utilisation'
-  submit: Envoyer
-  submit_registration: Inscription
-  submit_profile: 'Mettre à jour mon profil'
-  submit_change_password: 'Mettre à jour mon mot de passe'
-  submit_reset_password: 'Réinitialiser mon mot de passe'
+  user:
+    email: 'Adresse email'
+    email_alteration: 'Nouvelle adresse email'
+    firstname: 'Prénom'
+    lastname: 'Nom'
+    password: 'Mot de passe'
+    new_password: 'Nouveau mot de passe'
+    new_password_confirmation: 'Confirmer le nouveau mot de passe'
+    password_confirmation: 'Confirmation mot de passe'
+    current_password: 'Mot de passe actuel'
+    terms: 'J''accepte les conditions générales d''utilisation'
+    submit: Envoyer
+    submit_registration: Inscription
+    submit_profile: 'Mettre à jour mon profil'
+    submit_change_password: 'Mettre à jour mon mot de passe'
+    submit_reset_password: 'Réinitialiser mon mot de passe'
+    submit_change_email: 'Mettre à jour mon adresse email'
+    _password: 'Mot de passe'
+    _username: 'Adresse email'
+    confirm_delete: 'Confirmer la suppression'
+  submit_reset_password: 'Mettre à jour mon mot de passe'
+  submit_request_password: 'Réinitialiser'
 
 security:
   login:
@@ -35,18 +43,38 @@ resetting:
   request:
     check_email: "Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour réinitialiser votre mot de passe.\n\nSi vous ne recevez pas un email, vérifiez votre dossier spam ou essayez à nouveau.\n"
     username: 'Adresse email'
-    submit: 'Réinitialiser le mot de passe'
+    submit: 'Réinitialiser'
+    help: 'Réinitialiser son mot de passe'
+  reset:
+    help: 'Créer un nouveau mot de passe'
 
 change_password:
   submit: 'Modifier le mot de passe'
-  flash.success: 'Le mot de passe a été modifié.'
+  flash:
+    success: 'Le mot de passe a été modifié.'
+  help: 'Modifier le mot de passe'
+
+
 
 registration:
   check_email: 'Un e-mail a été envoyé à l''adresse %email%. Il contient un lien d''activation sur lequel il vous faudra cliquer afin d''activer votre compte.'
-  confirmed: 'Félicitations %username%, votre compte est maintenant activé.'
+  confirmed: 'Félicitations %firstname%, votre compte est maintenant activé.'
   back: 'Retour à la page d''origine.'
-  error: 'Votre adresse mail est déjà utilisée'
+  email_exists: 'Votre adresse mail est déjà utilisée'
 
 profile:
   flash:
     success: 'Votre profil à été mis à jour.'
+
+email_alteration:
+  flash:
+    check_email: |
+      Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour modifier votre adresse e-mail.
+      Si vous ne recevez pas un email, vérifiez votre dossier spam.
+    success: 'Votre adresse e-mail a bien été mise à jour'
+    cancel: 'Votre adresse e-mail a bien été restaurée'
+  help: 'Une fois votre adresse e-mail modifiée, un mail de confirmation vous sera envoyé sur votre nouvelle adresse et vous serez déconnecté.'
+
+sponsor:
+  registered: 'Inscrit'
+  invitation_sent: 'Invitation envoyée le %date%'

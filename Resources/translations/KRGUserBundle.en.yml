@@ -1,18 +1,24 @@
 form:
-  email: 'E-mail adress'
-  firstname: Firstname
-  lastname: Lastname
-  password: Password
-  new_password: 'New Password'
-  new_password_confirmation: 'Confirm the new password'
-  password_confirmation: 'Password confirmation'
-  current_password: 'Current Password'
-  terms: 'I accept the general terms of use'
-  submit: Send
-  submit_registration: Registration
-  submit_profile: 'Update profile'
-  submit_change_password: 'Change the password'
-  submit_reset_password: 'Reset password'
+  user:
+    email: 'E-mail address'
+    email_alteration: 'New e-mail address'
+    firstname: Firstname
+    lastname: Lastname
+    password: Password
+    new_password: 'New Password'
+    new_password_confirmation: 'Confirm the new password'
+    password_confirmation: 'Password confirmation'
+    current_password: 'Current Password'
+    terms: 'I accept the general terms of use'
+    submit: Send
+    submit_registration: Registration
+    submit_profile: 'Update profile'
+    submit_change_password: 'Change the password'
+    submit_reset_password: 'Reset password'
+    submit_change_email: 'Change the email'
+    _password: 'Password'
+    _username: 'E-mail address'
+    confirm_delete: 'Confirm deletion'
 
 security:
   login:
@@ -41,13 +47,26 @@ change_password:
   submit: 'Change the password'
   flash:
     success: 'The password has been changed.'
+  help: 'Update password'
 
 registration:
   check_email: 'An email has been sent to %email%. It contains an activation link that you will need to click in order to activate your account.'
-  confirmed: 'Congratulations %username%, your account is now activated.'
+  confirmed: 'Congratulations %firstname%, your account is now activated.'
   back: 'Back to the original page.'
-  error: 'Your email address is already used.'
+  email_exists: 'Your email address is already used.'
 
 profile:
   flash:
     success: 'Your profile has been updated.'
+
+email_alteration:
+  flash:
+    check_email: 'An email has been sent. It contains an activation link that you will need to click in order to update your email address.'
+    success: 'Your email address has been updated.'
+    cancel: 'Your email address has been restored.'
+  help: 'After your update, a confirmation email with an activation link will be sent and you will be logged out.'
+
+
+sponsor:
+  registered: 'Registered'
+  invitation_sent: 'Invitation was sent on %date%'

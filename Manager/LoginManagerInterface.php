@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 interface LoginManagerInterface
 {
     /**
-     * @param string        $firewallName
      * @param UserInterface $user
      * @param Response|null $response
      */

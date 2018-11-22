@@ -1,0 +1,10 @@
+{% extends '@KRGMessage/Default/mail.html.twig' %}
+{% trans_default_domain 'mails' %}
+
+{% block content %}
+    {{ 'sponsoring.message'|trans({
+        '%url%': url,
+        '%firstname%': user.firstname,
+        '%lastname%': user.lastname
+    }, 'mails')|raw|nl2br }}
+{% endblock %}

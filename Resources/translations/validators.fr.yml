@@ -1,0 +1,9 @@
+form:
+  user:
+    password:
+      mismatch: 'Les mots de passe ne correspondent pas'
+
+registration:
+  wrong_token: 'Le lien a expiré, veuillez utiliser le formulaire de connexion'
+
+

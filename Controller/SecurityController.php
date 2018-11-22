@@ -2,9 +2,12 @@
 
 namespace KRG\UserBundle\Controller;
 
+use KRG\UserBundle\Form\Type\LoginType;
 use KRG\UserBundle\Manager\LoginManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -17,10 +20,14 @@ class SecurityController extends AbstractController
     /** @var AuthenticationUtils */
     protected $authenticationUtils;
 
-    public function __construct(LoginManagerInterface $loginManager, AuthenticationUtils $authenticationUtils)
+    /** @var FormFactoryInterface */
+    protected $formFactory;
+
+    public function __construct(LoginManagerInterface $loginManager, AuthenticationUtils $authenticationUtils, FormFactoryInterface $formFactory)
     {
         $this->loginManager = $loginManager;
         $this->authenticationUtils = $authenticationUtils;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -32,13 +39,22 @@ class SecurityController extends AbstractController
         $error = $this->authenticationUtils->getLastAuthenticationError();
         $lastUsername = $this->authenticationUtils->getLastUsername();
 
+        $form = $this->formFactory
+            ->createNamed(null, LoginType::class, null, [
+                'action' => $this->generateUrl('krg_user_login_check')
+            ])
+            ->add('submit', SubmitType::class, ['label' => 'security.login.submit']);
+
         return $this->render('@KRGUser/security/login.html.twig', [
             'last_username' => $lastUsername,
             'error'         => $error,
+            'form'          => $form->createView()
         ]);
     }
 
     /**
+     * KRG\UserBundle\Security\Authenticator\TokenAuthenticator
+     *
      * @Route("/guess/{token}", name="krg_user_guess_token")
      */
     public function guessAction()

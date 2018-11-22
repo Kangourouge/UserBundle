@@ -1,0 +1,15 @@
+{% extends '@KRGUser/layout.html.twig' %}
+{% trans_default_domain 'KRGUserBundle' %}
+
+{% block container %}
+    {{ form(form) }}
+
+    {% set sponsors = app.user.sponsors %}
+    {% if sponsors|length %}
+        <ul>
+            {% for sponsor in app.user.sponsors %}
+                <li>{{ sponsor }} — {% if sponsor.godson is null %}{{ 'sponsor.invitation_sent'|trans({'%date%': sponsor.createdAt|date('d/m/Y')}, 'KRGUserBundle') }}{% else %}{{ 'sponsor.registered'|trans({}, 'KRGUserBundle') }}{% endif %}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

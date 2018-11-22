@@ -1,9 +1,0 @@
-{% extends '@KRGMessage/Default/mail.html.twig' %}
-
-{% block content %}
-    REGISTRATION
-
-    Link: <a href="{{ absolute_url(path('krg_user_registration_confirm', {token: user.confirmationToken})) }}">
-        {{ absolute_url(path('krg_user_registration_confirm', {token: user.confirmationToken})) }}
-    </a>
-{% endblock %}

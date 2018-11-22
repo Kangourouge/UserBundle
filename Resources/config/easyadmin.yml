@@ -7,5 +7,7 @@ easy_admin:
       -
         label: 'Security'
         priority: 1
+        roles: ['ROLE_OPERATOR']
         children:
             - { entity: 'User', icon: 'users', label: 'Users' }
+

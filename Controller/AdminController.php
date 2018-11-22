@@ -2,6 +2,7 @@
 
 namespace KRG\UserBundle\Controller;
 
+use Symfony\Component\Routing\Annotation\Route;
 use KRG\EasyAdminExtensionBundle\Filter\FilterListener;
 use KRG\MessageBundle\Service\Factory\MessageFactory;
 use KRG\UserBundle\Entity\UserInterface;
@@ -35,10 +36,10 @@ class AdminController extends \KRG\EasyAdminExtensionBundle\Controller\AdminCont
         } elseif ($this->isGranted('ROLE_PREVIOUS_ADMIN')) {
             $error = 'switch.twice';
         } else {
-            return $this->redirect(sprintf('%s?_switch_user=%s', $this->generateUrl('homepage'), $entity->getUsername()));
+            return $this->redirect(sprintf('%s?_switch_user=%s', '/', $entity->getUsername()));
         }
 
-        $this->addFlash('danger', $this->get('translator')->trans($error, [], 'error'));
+        $this->addFlash('danger', $this->get('translator')->trans($error, [], 'messages'));
 
         return $this->redirect(sprintf('%s?entity=%s&action=%s', $this->generateUrl('easyadmin'), $easyadmin['entity']['name'], 'list'));
     }

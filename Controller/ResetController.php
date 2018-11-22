@@ -2,13 +2,18 @@
 
 namespace KRG\UserBundle\Controller;
 
+use KRG\MessageBundle\Event\MessageDecorator;
+use KRG\MessageBundle\Service\Factory\MessageFactory;
+use KRG\UserBundle\Form\Type\ResetRequestType;
 use KRG\UserBundle\Manager\LoginManagerInterface;
 use KRG\UserBundle\Manager\UserManagerInterface;
 use KRG\UserBundle\Form\Type\ResetType;
+use KRG\UserBundle\Message\ResetPasswordMessage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -30,12 +35,26 @@ class ResetController extends AbstractController
     /** @var TranslatorInterface */
     protected $translator;
 
-    public function __construct(LoginManagerInterface $loginManager, UserManagerInterface $userManager, EventDispatcherInterface $eventDispatcher, TranslatorInterface $translator)
+    /** @var MessageFactory */
+    protected $messageFactory;
+
+    /** @var FormFactoryInterface */
+    protected $formFactory;
+
+    public function __construct(
+        LoginManagerInterface $loginManager,
+        UserManagerInterface $userManager,
+        EventDispatcherInterface $eventDispatcher,
+        TranslatorInterface $translator,
+        MessageFactory $messageFactory,
+        FormFactoryInterface $formFactory)
     {
         $this->loginManager = $loginManager;
         $this->userManager = $userManager;
         $this->dispatcher = $eventDispatcher;
         $this->translator = $translator;
+        $this->messageFactory = $messageFactory;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -45,7 +64,17 @@ class ResetController extends AbstractController
     {
         $this->loginManager->disconnectIfLogged();
 
-        return $this->render('@KRGUser/reset/request.html.twig');
+        $form = $this->formFactory
+            ->createNamed(null, ResetRequestType::class, null, [
+                'action' => $this->generateUrl('krg_user_reset_request_send')
+            ])
+            ->add('submit', SubmitType::class,
+                ['label' => 'form.submit_request_password']
+            );
+
+        return $this->render('@KRGUser/reset/request.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -61,8 +90,8 @@ class ResetController extends AbstractController
             $this->userManager->createConfirmationToken($user);
             $this->userManager->updateUser($user, true);
 
-//            $this->messageFactory->create(ResetPasswordMessage::class, ['user' => $user]);
-//            $this->dispatcher->dispatch(MessageEvents::SEND);
+            /** @var $message MessageDecorator */
+            $this->messageFactory->create(ResetPasswordMessage::class, ['user' => $user])->send();
 
             return $this->redirectToRoute('krg_user_reset_request_send');
         }
@@ -85,7 +114,9 @@ class ResetController extends AbstractController
         $form = $this
             ->createForm(ResetType::class)
             ->setData($user)
-            ->add('submit', SubmitType::class, ['label' => 'form.submit_reset_password']);
+            ->add('submit', SubmitType::class,
+                ['label' => 'form.submit_reset_password']
+            );
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -94,7 +125,7 @@ class ResetController extends AbstractController
             $this->userManager->processConfirmation($user);
             $this->userManager->updateUser($user, true);
 
-            $this->addFlash('notice', $this->translator->trans('change_password.flash.success', [], 'KRGUserBundle'));
+            $this->addFlash('success', $this->translator->trans('change_password.flash.success', [], 'KRGUserBundle'));
 
             return $this->redirectToRoute('krg_user_login');
         }

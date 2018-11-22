@@ -14,6 +14,11 @@ class GenderType extends AbstractType
         $resolver->setNormalizer('choices', function (OptionsResolver $resolver) {
             return GenderEnum::getChoices();
         });
+
+        $resolver->setDefaults([
+            'choice_translation_domain' => 'gender',
+            'expanded' => true,
+        ]);
     }
 
     public function getParent()

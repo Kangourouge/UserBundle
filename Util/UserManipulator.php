@@ -3,7 +3,6 @@
 namespace KRG\UserBundle\Util;
 
 use KRG\UserBundle\Manager\UserManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -134,13 +133,5 @@ class UserManipulator
         }
 
         return $user;
-    }
-
-    /**
-     * @return Request
-     */
-    private function getRequest()
-    {
-        return $this->requestStack->getCurrentRequest();
     }
 }

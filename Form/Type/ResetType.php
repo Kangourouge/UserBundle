@@ -15,10 +15,10 @@ class ResetType extends AbstractType
     {
         $builder->add('plainPassword', RepeatedType::class, [
             'type'            => PasswordType::class,
-            'first_options'   => ['label' => false, 'attr' => ['placeholder' => 'form.password']],
-            'second_options'  => ['label' => false, 'attr' => ['placeholder' => 'form.password_confirmation']],
-            'invalid_message' => 'Mismatch', // TODO: translate
-            'required'        => true
+            'first_options'   => ['label' => 'form.user.password'],
+            'second_options'  => ['label' => 'form.user.password_confirmation'],
+            'invalid_message' => 'form.user.error.password',
+            'required'        => true,
         ]);
     }
 
@@ -27,7 +27,7 @@ class ResetType extends AbstractType
         $resolver->setDefaults([
             'data_class'         => UserInterface::class,
             'translation_domain' => 'KRGUserBundle',
-            'label_format'       => 'form.%name%'
+            'label_format'       => 'form.user.%name%'
         ]);
     }
 

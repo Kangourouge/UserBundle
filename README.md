@@ -10,7 +10,8 @@ krg_user:
     registration:
         confirmed_target_route: homepage 
     login:
-        admin_redirect_route: easyadmin
+        admin_target_route: easyadmin
+        user_target_route: homepage
 
 doctrine:
     dbal:
@@ -35,9 +36,9 @@ krg_user:
 security:
     providers:
         email_provider:
-            entity: { class: AppBundle:User, property: emailCanonical }
+            entity: { class: KRG\UserBundle\Entity\UserInterface, property: emailCanonical }
         invitation_token_provider:
-            entity: { class: AppBundle:User, property: invitationToken }
+            entity: { class: KRG\UserBundle\Entity\UserInterface, property: invitationToken }
             
     firewalls:
         ...
@@ -93,7 +94,7 @@ EasyAdmin configuration:
 # app/config/admin.yml
 
 parameters:
-    krg_cms.user.class: AppBundle\Entity\User
+    krg_cms.user.class: 'AppBundle\Entity\User'
 
 imports:
     - { resource: '@KRGUserBundle/Resources/config/easyadmin/*.yml' }
@@ -113,9 +114,6 @@ class RegistrationType extends \KRG\UserBundle\Form\Type\RegistrationType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
-
-        $builder
-            ...
     }
 }
 ```

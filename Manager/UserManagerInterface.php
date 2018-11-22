@@ -2,7 +2,7 @@
 
 namespace KRG\UserBundle\Manager;
 
-use KRG\UserBundle\Entity\UserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 interface UserManagerInterface
 {
@@ -31,6 +31,8 @@ interface UserManagerInterface
     public function findUserByEmail($email);
 
     public function findUserByConfirmationToken($token);
+
+    public function findUserByCancelAlterationToken($token);
 
     public function updatePassword(UserInterface $user);
 }

@@ -7,9 +7,12 @@ use KRG\MessageBundle\Service\Factory\MessageFactory;
 use KRG\UserBundle\Entity\UserInterface;
 use KRG\UserBundle\Form\Type\RegistrationType;
 use KRG\UserBundle\Manager\LoginManagerInterface;
+use KRG\UserBundle\Manager\SponsorManager;
+use KRG\UserBundle\Manager\SponsorManagerInterface;
 use KRG\UserBundle\Manager\UserManagerInterface;
+use KRG\UserBundle\Message\RegistrationCheckEmailMessage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -20,6 +23,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -27,11 +31,16 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class RegistrationController extends AbstractController
 {
+    use TargetPathTrait;
+
     /** @var LoginManagerInterface */
     protected $loginManager;
 
     /** @var UserManagerInterface */
     protected $userManager;
+
+    /** @var SponsorManagerInterface */
+    protected $sponsorManager;
 
     /** @var EventDispatcherInterface */
     protected $eventDispatcher;
@@ -51,21 +60,24 @@ class RegistrationController extends AbstractController
     /** @var string */
     protected $confirmedTargetRoute;
 
-    public function __construct(LoginManagerInterface $loginManager,
-                                UserManagerInterface $userManager,
-                                EventDispatcherInterface $eventDispatcher,
-                                TokenStorageInterface $tokenStorage,
-                                SessionInterface $session,
-                                MessageFactory $messageFactory,
-                                TranslatorInterface $translator)
-    {
+    public function __construct(
+        LoginManagerInterface $loginManager,
+        UserManagerInterface $userManager,
+        SponsorManagerInterface $sponsorManager,
+        EventDispatcherInterface $eventDispatcher,
+        MessageFactory $messageFactory,
+        TranslatorInterface $translator,
+        TokenStorageInterface $tokenStorage,
+        SessionInterface $session
+    ) {
         $this->loginManager = $loginManager;
         $this->userManager = $userManager;
+        $this->sponsorManager = $sponsorManager;
+        $this->eventDispatcher = $eventDispatcher;
         $this->messageFactory = $messageFactory;
-        $this->tokenStorage = $tokenStorage;
-        $this->dispatcher = $eventDispatcher;
-        $this->session = $session;
         $this->translator = $translator;
+        $this->tokenStorage = $tokenStorage;
+        $this->session = $session;
     }
 
     /**
@@ -75,33 +87,40 @@ class RegistrationController extends AbstractController
     {
         $this->loginManager->disconnectIfLogged();
         $user = $this->userManager->createUser();
-        $user->setEnabled(true);
+
+        if ($request->query->has('email')) {
+            $user->setEmail($request->query->get('email'));
+        }
 
         $form = $this
-            ->createForm(RegistrationType::class, null, [
-                'action' => $this->generateUrl('krg_user_registration_register')
+            ->createForm(RegistrationType::class, $user, [
+                'action'         => $this->generateUrl('krg_user_registration_register'),
+                'godfather_code' => $request->query->get(SponsorManager::SPONSOR_PARAM),
             ])
-            ->setData($user)
             ->add('submit', SubmitType::class, ['label' => 'form.submit_registration']);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
+                /** @var $user UserInterface */
                 $user = $form->getData();
+
+                if ($godfatherCode = $form->get('godfatherCode')->getData()) {
+                    $this->sponsorManager->createGodfatherRelation($user, $godfatherCode);
+                }
 
                 $this->userManager->createConfirmationToken($user);
                 $this->userManager->updateUser($user, true);
 
-//                $this->messageFactory->create(RegistrationCheckEmailMessage::class, ['user' => $user]);
-//                $this->dispatcher->dispatch(MessageEvents::SEND);
+                $this->messageFactory->create(RegistrationCheckEmailMessage::class, ['user' => $user])->send();
 
                 $this->session->set('krg_user_send_confirmation_email/email', $user->getEmail());
 
                 return new RedirectResponse($this->generateUrl('krg_user_registration_check_email'));
             } catch (UniqueConstraintViolationException $exception) {
-                $form->addError(new FormError($this->translator->trans('user.email.exists', [], 'validators')));
+                $form->addError(new FormError($this->translator->trans('registration.email_exists', [], 'KRGUserBundle')));
             } catch (\Exception $exception) {
-                $form->addError(new FormError('Error'));
+                $form->addError(new FormError('Unknown Error'));
             }
         }
 
@@ -112,7 +131,6 @@ class RegistrationController extends AbstractController
 
     /**
      * Tell the user to check their email provider.
-     *
      * @Route("/check_email", name="krg_user_registration_check_email")
      */
     public function checkEmailAction(Request $request)
@@ -136,27 +154,25 @@ class RegistrationController extends AbstractController
 
     /**
      * Receive the confirmation token from user email provider, login the user.
-     *
      * @Route("/confirm/{token}", name="krg_user_registration_confirm")
      */
     public function confirmAction(Request $request, $token)
     {
+        $response = $this->redirect('/');
         $user = $this->userManager->findUserByConfirmationToken($token);
-        if (null === $user) {
-            throw new NotFoundHttpException(sprintf('The user with confirmation token "%s" does not exist', $token));
-        }
 
-        $user->setConfirmationToken(null);
-        $user->setEnabled(true);
-        $this->userManager->updateUser($user, true);
+        if ($user) {
+            $user->setConfirmationToken(null);
+            $user->setEnabled(true);
+            $this->userManager->updateUser($user, true);
 
-        $response = null;
-        try {
-            $response = new RedirectResponse($this->generateUrl('krg_user_registration_confirmed'));
-            $this->loginManager->logInUser($user, $response);
-        } catch (AccountStatusException $ex) {
-            // We simply do not authenticate users which do not pass the user
-            // checker (not enabled, expired, etc.).
+            try {
+                $response = new RedirectResponse($this->generateUrl('krg_user_registration_confirmed'));
+                $this->loginManager->logInUser($user, $response);
+            } catch (AccountStatusException $ex) {
+            }
+        } else {
+            $this->addFlash('danger', $this->translator->trans('registration.wrong_token', [], 'validators'));
         }
 
         return $response;
@@ -176,18 +192,8 @@ class RegistrationController extends AbstractController
 
         return $this->render('@KRGUser/registration/confirmed.html.twig', [
             'user'      => $user,
-            'targetUrl' => $this->confirmedTargetRoute ? $this->generateUrl($this->confirmedTargetRoute) : $this->getTargetUrlFromSession($request->getSession()),
+            'targetUrl' => $this->confirmedTargetRoute ? $this->generateUrl($this->confirmedTargetRoute) : $this->getTargetPath($request->getSession(), $this->tokenStorage->getToken()->getProviderKey()),
         ]);
-    }
-
-    protected function getTargetUrlFromSession(SessionInterface $session)
-    {
-        $key = sprintf('_security.%s.target_path', $this->tokenStorage->getToken()->getProviderKey());
-        if ($session->has($key)) {
-            return $session->get($key);
-        }
-
-        return null;
     }
 
     public function setConfirmedTargetRoute($confirmedTargetRoute)

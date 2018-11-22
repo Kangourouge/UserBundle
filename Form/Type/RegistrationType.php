@@ -6,6 +6,7 @@ use KRG\UserBundle\Entity\UserInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -15,9 +16,6 @@ use Symfony\Component\Validator\Constraints\IsTrue;
 
 class RegistrationType extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -26,31 +24,32 @@ class RegistrationType extends AbstractType
             ->add('lastname', TextType::class)
             ->add('plainPassword', RepeatedType::class, [
                 'type'            => PasswordType::class,
-                'first_options'   => ['label' => 'form.password'],
-                'second_options'  => ['label' => 'form.password_confirmation'],
-                'invalid_message' => 'form.error.password',
+                'first_options'   => ['label' => 'form.user.password'],
+                'second_options'  => ['label' => 'form.user.password_confirmation'],
+                'invalid_message' => 'form.user.error.password',
                 'required'        => true,
+            ])
+            ->add('godfatherCode', HiddenType::class, [
+                'mapped' => false,
+                'data'   => $options['godfather_code']
             ])
             ->add('terms', CheckboxType::class, [
                 'constraints' => new IsTrue(),
             ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class'         => UserInterface::class,
             'translation_domain' => 'KRGUserBundle',
-            'label_format'       => 'form.%name%'
+            'label_format'       => 'form.user.%name%',
+            'godfather_code'     => null,
         ]);
+
+        $resolver->addAllowedTypes('godfather_code', ['string', 'null']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getBlockPrefix()
     {
         return 'krg_user_registration';

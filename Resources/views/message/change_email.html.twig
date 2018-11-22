@@ -1,0 +1,9 @@
+{% extends '@KRGMessage/Default/mail.html.twig' %}
+{% trans_default_domain 'mails' %}
+
+{% block content %}
+    {{ 'change_email.message'|trans({
+        '%url%': absolute_url(path('krg_user_email_alteration_confirm', {token: user.confirmationToken})),
+        '%name%': user.lastname
+    }, 'mails')|raw|nl2br }}
+{% endblock %}

@@ -10,12 +10,12 @@ class InvitationMessage extends AbstractMailMessage
 {
     public function getTo()
     {
-        return $this->user->getEmail();
+        return $this->getOption('user')->getEmail();
     }
 
     public function getSubject()
     {
-        return $this->translator->trans('mail.subject.invitation', ['user' => $this->user], 'mails');
+        return $this->translator->trans('invitation.subject', ['user' => $this->getOption('user')], 'mails');
     }
 
     public function configureOptions(OptionsResolver $resolver)

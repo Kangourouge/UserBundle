@@ -48,6 +48,10 @@ services:
         lazy: true
         tags: ['message.type']
 
+    KRG\UserBundle\Validator\:
+        resource: '../../Validator'
+        public: true
+
     # Alias https://symfony.com/doc/current/service_container/alias_private.html
     security.authentication.success_handler.main.form_login:
         alias: KRG\UserBundle\Security\Firewall\AuthenticationSuccessHandler
@@ -55,6 +59,7 @@ services:
     # Interfaces https://symfony.com/doc/current/service_container/autowiring.html#using-aliases-to-enable-autowiring
     KRG\UserBundle\Manager\LoginManagerInterface: '@KRG\UserBundle\Manager\LoginManager'
     KRG\UserBundle\Manager\UserManagerInterface: '@KRG\UserBundle\Manager\UserManager'
+    KRG\UserBundle\Manager\SponsorManagerInterface: '@KRG\UserBundle\Manager\SponsorManager'
     KRG\UserBundle\Util\PasswordUpdaterInterface: '@KRG\UserBundle\Util\PasswordUpdater'
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface: '@KRG\UserBundle\Security\Firewall\AuthenticationSuccessHandler'
 
