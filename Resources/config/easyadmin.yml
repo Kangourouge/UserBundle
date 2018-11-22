@@ -1,12 +1,13 @@
 imports:
-    - { resource: easyadmin/ }
+  - { resource: easyadmin/ }
 
 easy_admin:
-    design:
-        menu:
-            -
-                label: 'menu.krg_user'
-                priority: 5
-                roles: ['ROLE_OPERATOR']
-                children:
-                    - { entity: 'User', icon: 'users', label: 'menu.user' }
+  design:
+    menu:
+      -
+        label: 'Security'
+        priority: 1
+        roles: ['ROLE_OPERATOR']
+        children:
+            - { entity: 'User', icon: 'users', label: 'Users' }
+

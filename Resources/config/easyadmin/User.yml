@@ -4,37 +4,12 @@ easy_admin:
             class: 'KRG\UserBundle\Entity\UserInterface'
             controller: 'KRG\UserBundle\Controller\AdminController'
             list:
-                title: '<i class="fa fa-users"></i> Users'
                 actions:
                     - { name: 'switch', icon: 'user-secret', css_class: 'btn btn-secondary', route: 'krg_user_admin_switch', roles: ['ROLE_ALLOWED_TO_SWITCH'], menu_dropdown: true }
-                fields:
-                    -
-                        property: 'email'
-                    -
-                        property: 'firstname'
-                    -
-                        property: 'lastname'
-                    -
-                        property: 'createdAt'
-                    -
-                        label: 'lastLogin'
-                        property: 'lastLogin'
-                    -
-                        property: 'enabled'
+                fields: ['email', 'firstname', 'lastname', 'createdAt', 'lastLogin', 'enabled']
             edit:
-                fields:
-                    - { property: 'email' }
-                    - { property: 'firstname' }
-                    - { property: 'lastname' }
-                    - { property: 'roles', type: 'choice', type_options: { multiple: true, choices: { 'ROLE_USER': 'ROLE_USER', 'ROLE_ADMIN': 'ROLE_ADMIN' } } }
-                    - { property: 'enabled' }
-                form_options: { validation_groups: ['Profile'] }
+                fields: ['email', 'firstname', 'lastname', 'roles', 'enabled']
+                form_options: { validation_groups: ['Registration'] }
             new:
-                fields:
-                    - { property: 'email' }
-                    - { property: 'firstname' }
-                    - { property: 'lastname' }
-                    - { property: 'plainPassword', type: 'text', 'label': 'Password', type_options: { required: true } }
-                    - { property: 'roles', type: 'choice', type_options: { multiple: true, choices: { 'ROLE_USER': 'ROLE_USER', 'ROLE_ADMIN': 'ROLE_ADMIN' } } }
-                    - { property: 'enabled' }
+                fields: ['email', 'firstname', 'lastname', 'roles', 'enabled']
                 form_options: { validation_groups: ['Registration'] }

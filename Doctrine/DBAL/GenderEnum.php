@@ -2,10 +2,12 @@
 
 namespace KRG\UserBundle\Doctrine\DBAL;
 
-class GenderEnum extends Enum
+use KRG\DoctrineExtensionBundle\DBAL\EnumType;
+
+class GenderEnum extends EnumType
 {
     const
-        MALE   = 'male',
+        MALE = 'male',
         FEMALE = 'female';
 
     public static $values = [

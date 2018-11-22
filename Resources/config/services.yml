@@ -5,6 +5,7 @@ services:
         public: false
         bind:
             $firewallName: 'main'
+            $roles: '%security.role_hierarchy.roles%'
 
     KRG\UserBundle\Controller\:
         resource: '../../Controller'
@@ -15,6 +16,10 @@ services:
         resource: '../../Form/Type'
         public: true
         tags: ['form.type']
+
+    KRG\UserBundle\Form\TypeGuesser\:
+        resource: '../../Form/TypeGuesser'
+        tags: ['form.type_guesser']
 
     KRG\UserBundle\EventSubscriber\:
         resource: '../../EventSubscriber'
