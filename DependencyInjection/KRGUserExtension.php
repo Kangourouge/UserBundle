@@ -4,6 +4,7 @@ namespace KRG\UserBundle\DependencyInjection;
 
 use KRG\UserBundle\Controller\RegistrationController;
 use KRG\UserBundle\Security\Firewall\AuthenticationSuccessHandler;
+use KRG\UserBundle\Security\KRGUBUserProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
@@ -39,6 +40,14 @@ class KRGUserExtension extends Extension
             $this->callServiceSetter(AuthenticationSuccessHandler::class, 'setUserTargetRoute', [
                 $config['login']['user_target_route']
             ]);
+        }
+
+        if (false === interface_exists('HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface')) {
+            foreach ($container->getDefinitions() as $key => $definition) {
+                if (KRGUBUserProvider::class === $key) {
+                    $container->removeDefinition($key);
+                }
+            }
         }
     }
 
