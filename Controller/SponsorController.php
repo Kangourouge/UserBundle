@@ -2,7 +2,6 @@
 
 namespace KRG\UserBundle\Controller;
 
-use KRG\UserBundle\Entity\SponsorInterface;
 use KRG\UserBundle\Manager\UserManager;
 use KRG\UserBundle\Form\Type\SponsoringType;
 use KRG\UserBundle\Manager\UserManagerInterface;

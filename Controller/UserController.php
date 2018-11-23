@@ -3,7 +3,6 @@
 namespace KRG\UserBundle\Controller;
 
 use KRG\UserBundle\Entity\UserInterface;
-use KRG\UserBundle\Form\Type\ConfirmType;
 use KRG\UserBundle\Form\Type\ProfileType;
 use KRG\UserBundle\Manager\UserManagerInterface;
 use KRG\UserBundle\Form\Type\ChangePasswordType;

@@ -4,12 +4,10 @@ namespace KRG\UserBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use KRG\UserBundle\Annotation\PrivateData;
 use KRG\UserBundle\Doctrine\DBAL\GenderEnum;
 use KRG\UserBundle\Util\Canonicalizer;
-use Gedmo\Mapping\Annotation as Gedmo;
 use KRG\UserBundle\Validator\Constraint\EmailUnique;
 use Symfony\Component\Validator\Constraints as Assert;
 

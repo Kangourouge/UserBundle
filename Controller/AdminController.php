@@ -7,12 +7,10 @@ use KRG\EasyAdminExtensionBundle\Filter\FilterListener;
 use KRG\MessageBundle\Service\Factory\MessageFactory;
 use KRG\UserBundle\Entity\UserInterface;
 use KRG\UserBundle\Message\InvitationMessage;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 
 class AdminController extends \KRG\EasyAdminExtensionBundle\Controller\AdminController
 {
-
     /** @var MessageFactory */
     protected $messageFactory;
 
@@ -39,7 +37,7 @@ class AdminController extends \KRG\EasyAdminExtensionBundle\Controller\AdminCont
             return $this->redirect(sprintf('%s?_switch_user=%s', '/', $entity->getUsername()));
         }
 
-        $this->addFlash('danger', $this->get('translator')->trans($error, [], 'messages'));
+        $this->addFlash('danger', $this->get('translator')->trans($error, [], 'admin'));
 
         return $this->redirect(sprintf('%s?entity=%s&action=%s', $this->generateUrl('easyadmin'), $easyadmin['entity']['name'], 'list'));
     }
@@ -54,7 +52,6 @@ class AdminController extends \KRG\EasyAdminExtensionBundle\Controller\AdminCont
 
     public function inviteAction()
     {
-
         $id = $this->request->query->get('id');
         $easyadmin = $this->request->attributes->get('easyadmin');
         $entity = $easyadmin['item'];

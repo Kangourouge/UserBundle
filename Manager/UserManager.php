@@ -3,8 +3,6 @@
 namespace KRG\UserBundle\Manager;
 
 use Doctrine\ORM\EntityManagerInterface;
-use KRG\UserBundle\Entity\Sponsor;
-use KRG\UserBundle\Entity\SponsorInterface;
 use KRG\UserBundle\Util\Canonicalizer;
 use KRG\UserBundle\Util\TokenGenerator;
 use KRG\UserBundle\Util\PasswordUpdaterInterface;
