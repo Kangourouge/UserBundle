@@ -61,7 +61,7 @@ class ChangeEmailController extends AbstractController
                 'action' => $this->generateUrl('krg_user_change_email'),
             ])
             ->add('submit', SubmitType::class, [
-                'label'  => 'form.user.submit_change_email',
+                'label'  => 'form.submit_change_email',
             ]);
 
         $form->handleRequest($request);

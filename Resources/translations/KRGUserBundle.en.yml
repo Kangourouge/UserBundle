@@ -11,14 +11,14 @@ form:
     current_password: 'Current Password'
     terms: 'I accept the general terms of use'
     submit: Send
-    submit_registration: Registration
-    submit_profile: 'Update profile'
-    submit_change_password: 'Change the password'
-    submit_reset_password: 'Reset password'
-    submit_change_email: 'Change the email'
     _password: 'Password'
     _username: 'E-mail address'
     confirm_delete: 'Confirm deletion'
+  submit_registration: Registration
+  submit_profile: 'Update profile'
+  submit_change_password: 'Change the password'
+  submit_reset_password: 'Reset password'
+  submit_change_email: 'Change my email'
 
 security:
   login:

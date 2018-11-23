@@ -103,7 +103,7 @@ class UserController extends AbstractController
                 'action' => $this->generateUrl('krg_user_change_password'),
             ])
             ->add('submit', SubmitType::class, [
-                'label'  => 'form.user.submit_change_password',
+                'label'  => 'form.submit_change_password',
             ]);
 
         $form->handleRequest($request);
