@@ -10,12 +10,14 @@ class InvitationMessage extends AbstractMailMessage
 {
     public function getTo()
     {
-        return $this->user->getEmail();
+        $user = $this->getOption('user');
+        return [$user->getEmail()];
     }
 
     public function getSubject()
     {
-        return $this->translator->trans('mail.subject.invitation', ['user' => $this->user], 'mails');
+        $user = $this->getOption('user');
+        return parent::getSubject(['user' => $user]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -24,5 +26,10 @@ class InvitationMessage extends AbstractMailMessage
 
         $resolver->setRequired(['user']);
         $resolver->setAllowedTypes('user', UserInterface::class);
+    }
+
+    protected function getTemplate()
+    {
+        return '@KRGUser/message/invitation.html.twig';
     }
 }

@@ -1,22 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8" />
-</head>
-<body>
-<div>
-    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-        {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'KRGUserBundle') }} {{ app.user.username }}
-        <a href="{{ path('krg_user_logout') }}">
-            {{ 'layout.logout'|trans({}, 'KRGUserBundle') }}
-        </a>
-    {% else %}
-        <a href="{{ path('krg_user_login') }}">{{ 'layout.login'|trans({}, 'KRGUserBundle') }}</a>
-    {% endif %}
-</div>
-<div>
-    {% block content %}
-    {% endblock content %}
-</div>
-</body>
-</html>
+{% extends 'base.html.twig' %}
+
+{% block content %}
+{% endblock content %}

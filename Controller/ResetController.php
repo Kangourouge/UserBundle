@@ -2,9 +2,11 @@
 
 namespace KRG\UserBundle\Controller;
 
+use KRG\MessageBundle\Service\Factory\MessageFactory;
 use KRG\UserBundle\Manager\LoginManagerInterface;
 use KRG\UserBundle\Manager\UserManagerInterface;
 use KRG\UserBundle\Form\Type\ResetType;
+use KRG\UserBundle\Message\ResetPasswordMessage;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -24,17 +26,25 @@ class ResetController extends AbstractController
     /** @var UserManagerInterface */
     protected $userManager;
 
-    /** @var EventDispatcherInterface */
-    protected $dispatcher;
+    /** @var MessageFactory */
+    protected $messageFactory;
 
     /** @var TranslatorInterface */
     protected $translator;
 
-    public function __construct(LoginManagerInterface $loginManager, UserManagerInterface $userManager, EventDispatcherInterface $eventDispatcher, TranslatorInterface $translator)
+    /**
+     * ResetController constructor.
+     *
+     * @param LoginManagerInterface $loginManager
+     * @param UserManagerInterface $userManager
+     * @param MessageFactory $messageFactory
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(LoginManagerInterface $loginManager, UserManagerInterface $userManager, MessageFactory $messageFactory, TranslatorInterface $translator)
     {
         $this->loginManager = $loginManager;
         $this->userManager = $userManager;
-        $this->dispatcher = $eventDispatcher;
+        $this->messageFactory = $messageFactory;
         $this->translator = $translator;
     }
 
@@ -61,8 +71,7 @@ class ResetController extends AbstractController
             $this->userManager->createConfirmationToken($user);
             $this->userManager->updateUser($user, true);
 
-//            $this->messageFactory->create(ResetPasswordMessage::class, ['user' => $user]);
-//            $this->dispatcher->dispatch(MessageEvents::SEND);
+            $this->messageFactory->create(ResetPasswordMessage::class, ['user' => $user])->send();
 
             return $this->redirectToRoute('krg_user_reset_request_send');
         }
