@@ -3,23 +3,12 @@
 namespace KRG\UserBundle\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
-use KRG\EasyAdminExtensionBundle\Filter\FilterListener;
 use KRG\MessageBundle\Service\Factory\MessageFactory;
 use KRG\UserBundle\Entity\UserInterface;
 use KRG\UserBundle\Message\InvitationMessage;
-use Symfony\Component\Form\FormFactoryInterface;
 
 class AdminController extends \KRG\EasyAdminExtensionBundle\Controller\AdminController
 {
-    /** @var MessageFactory */
-    protected $messageFactory;
-
-    public function __construct(FormFactoryInterface $formFactory, FilterListener $filterListener, MessageFactory $messageFactory)
-    {
-        parent::__construct($formFactory, $filterListener);
-        $this->messageFactory = $messageFactory;
-    }
-
     /**
      * @Route("/switch", name="krg_user_admin_switch")
      */
@@ -79,6 +68,6 @@ class AdminController extends \KRG\EasyAdminExtensionBundle\Controller\AdminCont
         $entityManager->persist($user);
         $entityManager->flush();
 
-        $this->messageFactory->create(InvitationMessage::class, ['user' => $user])->send();
+        $this->get(MessageFactory::class)->create(InvitationMessage::class, ['user' => $user])->send();
     }
 }
