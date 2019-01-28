@@ -5,6 +5,7 @@ namespace KRG\UserBundle\Security\Authenticator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
@@ -49,6 +50,11 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         }
 
         return $userProvider->loadUserByUsername($token);
+    }
+
+    public function createAuthenticatedToken(UserInterface $user, $providerKey)
+    {
+        return new UsernamePasswordToken($user, null, 'main', $user->getRoles());
     }
 
     public function checkCredentials($credentials, UserInterface $user)
