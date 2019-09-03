@@ -13,7 +13,7 @@ class SponsoringMessage extends AbstractMailMessage
 		return $this->getOption('to');
 	}
 
-	public function getSubject()
+	public function getSubject(array $parameters = [])
 	{
         return $this->translator->trans('sponsoring.subject', [
             '%firstname%' => $this->getOption('user')->getFirstname(),

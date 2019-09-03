@@ -13,7 +13,7 @@ class ChangeEmailCancelMessage extends AbstractMailMessage
         return $this->getOption('user')->getEmail();
     }
 
-    public function getSubject()
+    public function getSubject(array $parameters = [])
     {
         return $this->translator->trans('change_email_cancel.subject', ['user' => $this->getOption('user')], 'mails');
     }

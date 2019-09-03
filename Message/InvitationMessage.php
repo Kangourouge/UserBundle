@@ -13,7 +13,7 @@ class InvitationMessage extends AbstractMailMessage
         return $this->getOption('user')->getEmail();
     }
 
-    public function getSubject()
+    public function getSubject(array $parameters = [])
     {
         return $this->translator->trans('invitation.subject', ['user' => $this->getOption('user')], 'mails');
     }

@@ -13,7 +13,7 @@ class RegistrationCheckEmailMessage extends AbstractMailMessage
         return $this->getOption('user')->getEmail();
     }
 
-    public function getSubject()
+    public function getSubject(array $parameters = [])
     {
         return $this->translator->trans('registration.subject', ['user' => $this->getOption('user')], 'mails');
     }
