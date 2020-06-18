@@ -1,4 +1,8 @@
-# UserBundle
+# [LEGACY] UserBundle
+
+**abandoned!**
+
+Use [FOS user](https://github.com/FriendsOfSymfony/FOSUserBundle) instead.
 
 Configuration
 -------------
