@@ -26,5 +26,6 @@
       "type": "vcs",
       "url" : "https://github.com/Kangourouge/MessageBundle.git"
     }
-  ]
+  ],
+  "abandoned": "friendsofsymfony/user-bundle"
 }
