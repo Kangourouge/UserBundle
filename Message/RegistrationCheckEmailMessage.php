@@ -14,7 +14,7 @@ class RegistrationCheckEmailMessage extends AbstractMailMessage
         return [$user->getEmail()];
     }
 
-    public function getSubject()
+    public function getSubject(array $parameters = [])
     {
         $user = $this->getOption('user');
         return parent::getSubject(['user' => $user]);
